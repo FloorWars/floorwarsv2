@@ -18,6 +18,7 @@ margin: 0px 20px;
 /* Card */
 
 div.collateralCard{
+position:static;
 width:326px;
 height: 130px;
 left: -12px;
