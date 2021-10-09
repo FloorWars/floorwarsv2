@@ -21,7 +21,7 @@ import {
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 // import Hints from "./Hints";
-import { ExampleUI, Hints, Subgraph } from "./views";
+import { ExampleUI, Hints, Subgraph, BoredPunks } from "./views";
 
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
@@ -53,30 +53,31 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS.mumbai; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
 
 // 🛰 providers
-if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
+if (DEBUG) console.log("📡 Connecting to Mumbai Testnet");
 // const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
 // const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
 //
 // attempt to connect to our own scaffold eth rpc and if that fails fall back to infura...
 // Using StaticJsonRpcProvider as the chainId won't change see https://github.com/ethers-io/ethers.js/issues/901
-const scaffoldEthProvider = navigator.onLine
-  ? new ethers.providers.StaticJsonRpcProvider("https://rpc.scaffoldeth.io:48544")
-  : null;
-const poktMainnetProvider = navigator.onLine
-  ? new ethers.providers.StaticJsonRpcProvider(
-      "https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
-    )
-  : null;
-const mainnetInfura = navigator.onLine
-  ? new ethers.providers.StaticJsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
-  : null;
+// const scaffoldEthProvider = navigator.onLine
+//   ? new ethers.providers.StaticJsonRpcProvider("https://rpc.scaffoldeth.io:48544")
+//   : null;
+// const poktMainnetProvider = navigator.onLine
+//   ? new ethers.providers.StaticJsonRpcProvider(
+//       "https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
+//     )
+//   : null;
+// const mainnetInfura = navigator.onLine
+//   ? new ethers.providers.StaticJsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
+//   : null;
+const mumbaiProvider = new ethers.providers.StaticJsonRpcProvider("https://speedy-nodes-nyc.moralis.io/d376b2384f04b47cf322a1c2/polygon/mumbai")
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID
 // 🏠 Your local provider is usually pointed at your local blockchain
 const localProviderUrl = targetNetwork.rpcUrl;
@@ -166,12 +167,12 @@ const web3Modal = new Web3Modal({
 });
 
 function App(props) {
-  const mainnetProvider =
-    poktMainnetProvider && poktMainnetProvider._isProvider
-      ? poktMainnetProvider
-      : scaffoldEthProvider && scaffoldEthProvider._network
-      ? scaffoldEthProvider
-      : mainnetInfura;
+  const mainnetProvider = mumbaiProvider;
+    // poktMainnetProvider && poktMainnetProvider._isProvider
+    //   ? poktMainnetProvider
+    //   : scaffoldEthProvider && scaffoldEthProvider._network
+    //   ? scaffoldEthProvider
+    //   : mainnetInfura;
 
   const [injectedProvider, setInjectedProvider] = useState();
   const [address, setAddress] = useState();
@@ -483,26 +484,56 @@ function App(props) {
             </Link>
           </Menu.Item>
           <Menu.Item key="/mainnetdai">
-            <Link
-              onClick={() => {
-                setRoute("/mainnetdai");
-              }}
-              to="/mainnetdai"
-            >
-              Mainnet DAI
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/subgraph">
-            <Link
-              onClick={() => {
-                setRoute("/subgraph");
-              }}
-              to="/subgraph"
-            >
-              Subgraph
-            </Link>
-          </Menu.Item>
-        </Menu>
+              <Link
+                onClick={() => {
+                  setRoute("/mainnetdai");
+                }}
+                to="/mainnetdai"
+              >
+                Mumbai DAI
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/mainnetwmatic">
+              <Link
+                onClick={() => {
+                  setRoute("/mainnetwmatic");
+                }}
+                to="/mainnetwmatic"
+              >
+                Mumbai WMATIC
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/mainnetusdc">
+              <Link
+                onClick={() => {
+                  setRoute("/mainnetusdc");
+                }}
+                to="/mainnetusdc"
+              >
+                Mumbai USDC
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/mainnetlsp">
+              <Link
+                onClick={() => {
+                  setRoute("/mainnetlsp");
+                }}
+                to="/mainnetlsp"
+              >
+                Mumbai LSP
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/BOREDPUNKS">
+              <Link
+                onClick={() => {
+                  setRoute("/BOREDPUNKS");
+                }}
+                to="/BOREDPUNKS"
+              >
+                BOREDPUNKS
+              </Link>
+            </Menu.Item>
+          </Menu>
 
         <Switch>
           <Route exact path="/">
@@ -551,27 +582,60 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://etherscan.io/"
+              blockExplorer="https://etherscan.io"
               contractConfig={contractConfig}
-              chainId={1}
+              chainId={80001}
             />
             {/*
+
+            */}
+          </Route>
+          <Route path="/mainnetwmatic">
             <Contract
-              name="UNI"
-              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.UNI}
+              name="WMATIC"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.WMATIC}
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
               blockExplorer="https://etherscan.io/"
+              contractConfig={contractConfig}
+              chainId={80001}
             />
-            */}
           </Route>
-          <Route path="/subgraph">
-            <Subgraph
-              subgraphUri={props.subgraphUri}
+          <Route path="/mainnetusdc">
+            <Contract
+              name="USDC"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.USDC}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer="https://etherscan.io/"
+              contractConfig={contractConfig}
+              chainId={80001}
+            />
+          </Route>
+          <Route path="/mainnetlsp">
+            <Contract
+              name="LSP"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.LSP}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer="https://mumbai.polygonscan.com/"
+              contractConfig={contractConfig}
+              chainId={80001}
+            />
+          </Route>
+          <Route path="/BOREDPUNKS">
+            <BoredPunks
+              address={address}
+              // usdcBalance={usdcBalance}
+              // longBalance={longBalance}
+              // shortBalance={shortBalance}
               tx={tx}
-              writeContracts={writeContracts}
               mainnetProvider={mainnetProvider}
+              readContracts={readContracts}
+              writeContracts={writeContracts}
             />
           </Route>
         </Switch>
