@@ -1618,22 +1618,10 @@ const LSPABI = [
   }
 ]
 
->>>>>>> 939f6da471e64c3d5cf434531173cdc854468b59
 
 // Mainnet DAI, Optimism and Arbitrium Rollup Contracts with local addresses
 module.exports = {
-      1: {
-    contracts: {
-      DAI: {
-        address: "0x6b175474e89094c44da98b954eedeac495271d0f",
-        abi: DAIABI,
-      },
-      UNI: {
-        address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-        abi: ERC20ABI,
-      },
-    },
-  },
+      
   80001: {
     contracts: {
       DAI: {
@@ -1662,27 +1650,6 @@ module.exports = {
       },
     },
   },
-<<<<<<< HEAD
-=======
-  31337: {
-    contracts: {
-      DAI: {
-        address: "0x6b175474e89094c44da98b954eedeac495271d0f",
-        abi: DAIABI,
-      },
-      UNI: {
-        address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-        abi: ERC20ABI,
-      },
-      USDC: {
-        address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-        abi: ERC20ABI,
-      },
-      LSP: {
-        address: "0x79b6BD0FC723746bC9eAEFeF34613cF4596E6dEF", //Fill me in
-        abi: LSPABI,
-      }
-    }
-  }
->>>>>>> 939f6da471e64c3d5cf434531173cdc854468b59
+
+
 };
