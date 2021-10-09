@@ -21,7 +21,7 @@ import {
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 // import Hints from "./Hints";
-import { ExampleUI, Hints, Subgraph } from "./views";
+import { ExampleUI, Hints, PunkOffers, Subgraph } from "./views";
 
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
@@ -472,6 +472,16 @@ function App(props) {
               Hints
             </Link>
           </Menu.Item>
+          <Menu.Item key="/punkoffers">
+            <Link
+              onClick={() => {
+                setRoute("/punkoffers");
+              }}
+              to="/punkoffers"
+            >
+              Punk Offers
+            </Link>
+          </Menu.Item>
           <Menu.Item key="/exampleui">
             <Link
               onClick={() => {
@@ -492,6 +502,17 @@ function App(props) {
               Mainnet DAI
             </Link>
           </Menu.Item>
+          <Menu.Item key="/cryptopunksmarket">
+            <Link
+              onClick={() => {
+                setRoute("/cryptopunksmarket");
+              }}
+              to="/cryptopunksmarket"
+            >
+              Mainnet CryptoPunksMarket
+            </Link>
+          </Menu.Item>
+
           <Menu.Item key="/subgraph">
             <Link
               onClick={() => {
@@ -529,6 +550,14 @@ function App(props) {
               price={price}
             />
           </Route>
+          <Route path="/punkoffers">
+            <PunkOffers
+              mainnetProvider={mainnetProvider}
+              mainnetContracts={mainnetContracts}
+              writeContracts={writeContracts}
+              readContracts={readContracts}
+            />
+          </Route>
           <Route path="/exampleui">
             <ExampleUI
               address={address}
@@ -548,6 +577,18 @@ function App(props) {
             <Contract
               name="DAI"
               customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.DAI}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer="https://etherscan.io/"
+              contractConfig={contractConfig}
+              chainId={1}
+            />
+          </Route>
+          <Route path="/cryptopunksmarket">
+            <Contract
+              name="CryptoPunksMarket"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.CryptoPunksMarket}
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
