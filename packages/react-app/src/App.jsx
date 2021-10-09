@@ -53,30 +53,31 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS.mumbai; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
 
 // 🛰 providers
-if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
+if (DEBUG) console.log("📡 Connecting to Mumbai Testnet");
 // const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
 // const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
 //
 // attempt to connect to our own scaffold eth rpc and if that fails fall back to infura...
 // Using StaticJsonRpcProvider as the chainId won't change see https://github.com/ethers-io/ethers.js/issues/901
-const scaffoldEthProvider = navigator.onLine
-  ? new ethers.providers.StaticJsonRpcProvider("https://rpc.scaffoldeth.io:48544")
-  : null;
-const poktMainnetProvider = navigator.onLine
-  ? new ethers.providers.StaticJsonRpcProvider(
-      "https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
-    )
-  : null;
-const mainnetInfura = navigator.onLine
-  ? new ethers.providers.StaticJsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
-  : null;
+// const scaffoldEthProvider = navigator.onLine
+//   ? new ethers.providers.StaticJsonRpcProvider("https://rpc.scaffoldeth.io:48544")
+//   : null;
+// const poktMainnetProvider = navigator.onLine
+//   ? new ethers.providers.StaticJsonRpcProvider(
+//       "https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
+//     )
+//   : null;
+// const mainnetInfura = navigator.onLine
+//   ? new ethers.providers.StaticJsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
+//   : null;
+const mumbaiProvider = new ethers.providers.StaticJsonRpcProvider("https://speedy-nodes-nyc.moralis.io/d376b2384f04b47cf322a1c2/polygon/mumbai")
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID
 // 🏠 Your local provider is usually pointed at your local blockchain
 const localProviderUrl = targetNetwork.rpcUrl;
@@ -166,12 +167,12 @@ const web3Modal = new Web3Modal({
 });
 
 function App(props) {
-  const mainnetProvider =
-    poktMainnetProvider && poktMainnetProvider._isProvider
-      ? poktMainnetProvider
-      : scaffoldEthProvider && scaffoldEthProvider._network
-      ? scaffoldEthProvider
-      : mainnetInfura;
+  const mainnetProvider = mumbaiProvider;
+    // poktMainnetProvider && poktMainnetProvider._isProvider
+    //   ? poktMainnetProvider
+    //   : scaffoldEthProvider && scaffoldEthProvider._network
+    //   ? scaffoldEthProvider
+    //   : mainnetInfura;
 
   const [injectedProvider, setInjectedProvider] = useState();
   const [address, setAddress] = useState();
