@@ -21,7 +21,7 @@ import {
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 // import Hints from "./Hints";
-import { ExampleUI, Hints, Subgraph } from "./views";
+import { ExampleUI, Hints, Subgraph, BoredPunks } from "./views";
 
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
@@ -484,26 +484,56 @@ function App(props) {
             </Link>
           </Menu.Item>
           <Menu.Item key="/mainnetdai">
-            <Link
-              onClick={() => {
-                setRoute("/mainnetdai");
-              }}
-              to="/mainnetdai"
-            >
-              Mainnet DAI
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/subgraph">
-            <Link
-              onClick={() => {
-                setRoute("/subgraph");
-              }}
-              to="/subgraph"
-            >
-              Subgraph
-            </Link>
-          </Menu.Item>
-        </Menu>
+              <Link
+                onClick={() => {
+                  setRoute("/mainnetdai");
+                }}
+                to="/mainnetdai"
+              >
+                Mumbai DAI
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/mainnetwmatic">
+              <Link
+                onClick={() => {
+                  setRoute("/mainnetwmatic");
+                }}
+                to="/mainnetwmatic"
+              >
+                Mumbai WMATIC
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/mainnetusdc">
+              <Link
+                onClick={() => {
+                  setRoute("/mainnetusdc");
+                }}
+                to="/mainnetusdc"
+              >
+                Mumbai USDC
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/mainnetlsp">
+              <Link
+                onClick={() => {
+                  setRoute("/mainnetlsp");
+                }}
+                to="/mainnetlsp"
+              >
+                Mumbai LSP
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/BOREDPUNKS">
+              <Link
+                onClick={() => {
+                  setRoute("/BOREDPUNKS");
+                }}
+                to="/BOREDPUNKS"
+              >
+                BOREDPUNKS
+              </Link>
+            </Menu.Item>
+          </Menu>
 
         <Switch>
           <Route exact path="/">
@@ -552,27 +582,60 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://etherscan.io/"
+              blockExplorer="https://etherscan.io"
               contractConfig={contractConfig}
-              chainId={1}
+              chainId={80001}
             />
             {/*
+
+            */}
+          </Route>
+          <Route path="/mainnetwmatic">
             <Contract
-              name="UNI"
-              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.UNI}
+              name="WMATIC"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.WMATIC}
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
               blockExplorer="https://etherscan.io/"
+              contractConfig={contractConfig}
+              chainId={80001}
             />
-            */}
           </Route>
-          <Route path="/subgraph">
-            <Subgraph
-              subgraphUri={props.subgraphUri}
+          <Route path="/mainnetusdc">
+            <Contract
+              name="USDC"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.USDC}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer="https://etherscan.io/"
+              contractConfig={contractConfig}
+              chainId={80001}
+            />
+          </Route>
+          <Route path="/mainnetlsp">
+            <Contract
+              name="LSP"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.LSP}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer="https://mumbai.polygonscan.com/"
+              contractConfig={contractConfig}
+              chainId={80001}
+            />
+          </Route>
+          <Route path="/BOREDPUNKS">
+            <BoredPunks
+              address={address}
+              // usdcBalance={usdcBalance}
+              // longBalance={longBalance}
+              // shortBalance={shortBalance}
               tx={tx}
-              writeContracts={writeContracts}
               mainnetProvider={mainnetProvider}
+              readContracts={readContracts}
+              writeContracts={writeContracts}
             />
           </Route>
         </Switch>
