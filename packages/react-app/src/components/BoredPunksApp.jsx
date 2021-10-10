@@ -59,8 +59,6 @@ export default function BoredPunksApp(props) {
           <Text strong>Last fl10PUNKUSD Price: {Math.round(1/price)}</Text>
           <br></br>
           <Text strong>Last Long Token Collateral Value: {longCollateralValue}</Text>
-          <br></br>
-          <Text strong>Total L/S tokens outstanding: 1000</Text>
          </div>
 
        </Col>
