@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 const { utils } = require("ethers");
-import { Row, Col, Layout, Menu, Breadcrumb, Typography, Space } from "antd";
+import { Row, Col, Divider, Layout, List, Menu, Breadcrumb, Typography, Space } from "antd";
 import "./BoredPunks.css";
 import BoredPunksPosition from "./BoredPunksPosition";
 
@@ -41,24 +41,35 @@ export default function BoredPunksApp(props) {
        <Col span={7}>
 
          <div className="ProductDiv">
-          <Title level = {5}>Product: USDfw10PUNKc800000-1221 </Title>
-          <Text strong>Full Name: USD / Decile FloorWars CryptoPunks Covered Call </Text>
-          <br></br>
-          <Text strong>Strike Price (inverse): {strike}</Text>
-          <br></br>
-          <Text strong>Expiration: {expiry}</Text>
-          <br></br>
-          <Text strong>Collateral: {collateralCurr}</Text>
-          <br></br>
-          <Text strong>Total Collateral Locked: {tvl} {collateralCurr}</Text>
-          <br></br>
-          <Text strong>Last ETHUSD Price: {ethPrice}</Text>
-          <br></br>
-          <Text strong>Last USDfl10PUNK Price: {price}</Text>
-          <br></br>
-          <Text strong>Last fl10PUNKUSD Price: {Math.round(1/price)}</Text>
-          <br></br>
-          <Text strong>Last Long Token Collateral Value: {longCollateralValue}</Text>
+           <Divider >Product Info</Divider>
+           <List itemLayout="horizontal" dataSource={[
+             {descr: 'Synth Token Pair Name', content: 'USD / Decile FloorWars CryptoPunks Covered Call' },
+             {descr: 'Strike Price (inverted)', content: `${strike} ${collateralCurr}`},
+             {descr: 'Expiry', content: expiry}, 
+             {descr: 'Collateral', content: collateralCurr}, 
+             ]}
+             renderItem={item => (
+               <List.Item>
+                 <List.Item.Meta description={item.descr} />
+                  {item.content}
+               </List.Item>
+             )}
+           />
+           <Divider >Live Price Data</Divider>
+           <List itemLayout="horizontal" dataSource={[
+             {descr: 'Total Collateral Locked', content: `${tvl} ${collateralCurr}`}, 
+             {descr: 'Last ETHUSD Price', content: ethPrice}, 
+             {descr: 'Last USDfw10PUNK Price', content: price}, 
+             {descr: 'Last fw10PUNKUSD Price', content: Math.round(1/price)}, 
+             {descr: 'Last Long Token Value in Collateral', content: longCollateralValue}, 
+             ]}
+             renderItem={item => (
+               <List.Item>
+                 <List.Item.Meta description={item.descr} />
+                  {item.content}
+               </List.Item>
+             )}
+           />
          </div>
 
        </Col>
