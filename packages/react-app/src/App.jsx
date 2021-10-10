@@ -645,7 +645,7 @@ function App(props) {
           </Route>
           <Route path="/lspLongToken">
             <Contract
-              name="lspLongToken"
+              name="LONG"
               customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.LONG}
               signer={userSigner}
               provider={mainnetProvider}
@@ -657,7 +657,7 @@ function App(props) {
           </Route>
           <Route path="/lspShortToken">
             <Contract
-              name="lspShortToken"
+              name="SHORT"
               customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.SHORT}
               signer={userSigner}
               provider={mainnetProvider}
