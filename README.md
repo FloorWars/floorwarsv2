@@ -1,3 +1,18 @@
+# PUNKOFFER Branch
+
+This branch implements a tab or page that uses the included providers to collect offer prices of CryptoPunks from their Market contract. Mean and median Decile FloorWars index values are calculated based on the data collected in real time.
+
+Since many contract calls are required, requests are sent on demand 1000 tokens at a time when each of the 10 sections is clicked on to expand. Values are cached in the browser to persist across runs or if the page crashes due to running out of resources. Use cached values by clicking the above button. When the data is considered stale, clear the cache with the button on the bottom.
+
+Many Punks are not offered for sale so will not have any prices associated with them. Of those, not all will be valid (public sale). There should be at least 1000 valid offers of which the 10% cheapest ones are used in the calculation.
+
+Besides decile floor mean and median, the first floor ("floor" as commonly defined) is also found and shown.
+
+NOTE: Deploying contracts or running a local chain are not required.
+
+Below this is the original scaffold-eth README.
+
+
 # 🏗 Scaffold-ETH
 
 > everything you need to build on Ethereum! 🚀
