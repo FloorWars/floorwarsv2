@@ -12,8 +12,8 @@ export default function BoredPunks({
   address,
   price,
   usdcBalance,
-  // longBalance,
-  // shortBalance,
+  longBalance,
+  shortBalance,
   tx,
   mainnetProvider,
   readContracts,
@@ -38,7 +38,7 @@ export default function BoredPunks({
      <Content style={{ padding: '0 50px' }}>
 
        <div className="site-layout-content">
-          <BoredPunksApp address={address} price={price} tx={tx} readContracts={readContracts} writeContracts={writeContracts} usdcBalance={usdcBalance} />
+          <BoredPunksApp address={address} price={price} tx={tx} readContracts={readContracts} writeContracts={writeContracts} usdcBalance={usdcBalance} longBalance = {longBalance} shortBalance = {shortBalance}/>
        </div>
      </Content>
    </Layout>

@@ -23,7 +23,7 @@ export default function BoredPunksApp(props) {
   const [price, setPrice] = useState(0);
 
   const longCollateralValue = (price - 1/parseFloat(strike))/(price);
- 
+
   useEffect(async () => {
     const result = await fetch( '/demoprice.json');
     const newPrice = await result.json();
@@ -66,7 +66,7 @@ export default function BoredPunksApp(props) {
        </Col>
 
        <Col span={8}>
-          <BoredPunksPosition tx = {props.tx} address = {props.address} readContracts = {props.readContracts} writeContracts = {props.writeContracts} usdcBalance = {props.usdcBalance} />
+          <BoredPunksPosition tx = {props.tx} address = {props.address} readContracts = {props.readContracts} writeContracts = {props.writeContracts} usdcBalance = {props.usdcBalance} longBalance = {props.longBalance} shortBalance = {props.shortBalance}/>
        </Col>
       </Space>
     </Row>

@@ -254,7 +254,16 @@ function App(props) {
     address,
   ]);
 
+  const lspTokenBalance = useContractReader(mainnetContracts, "LSP", "getPositionTokens", [
+    address,
+  ]);
+  let longBalance = 0;
+  let shortBalance = 0;
 
+  if(lspTokenBalance) {
+    longBalance = lspTokenBalance[0]
+    shortBalance = lspTokenBalance[1]
+  }
 
   // keep track of a variable from the contract in the local React state:
   const purpose = useContractReader(readContracts, "YourContract", "purpose");
@@ -637,7 +646,8 @@ function App(props) {
               address={address}
               price={price}
               usdcBalance={myMainnetUSDCBalance}
-              // longShortBalance={longShortBalance}
+              longBalance={longBalance}
+              shortBalance={shortBalance}
               tx={tx}
               mainnetProvider={mainnetProvider}
               readContracts={readContracts}
