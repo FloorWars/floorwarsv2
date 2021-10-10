@@ -44,8 +44,8 @@ export default function BoredPunksApp(props) {
            <List itemLayout="horizontal" dataSource={[
              {descr: 'Synth Token Pair Name', content: 'USD / Decile FloorWars CryptoPunks Covered Call' },
              {descr: 'Strike Price (inverted)', content: `${strike} ${collateralCurr}`},
-             {descr: 'Expiry', content: expiry}, 
-             {descr: 'Collateral', content: collateralCurr}, 
+             {descr: 'Expiry', content: expiry},
+             {descr: 'Collateral', content: collateralCurr},
              ]}
              renderItem={item => (
                <List.Item>
@@ -60,11 +60,11 @@ export default function BoredPunksApp(props) {
          <div className="ProductDiv">
            <Divider >Live Price Data</Divider>
            <List itemLayout="horizontal" dataSource={[
-             {descr: 'Total Collateral Locked', content: `${tvl} ${collateralCurr}`}, 
-             {descr: 'Last ETHUSD Price', content: ethPrice}, 
-             {descr: 'Last USDfw10PUNK Price', content: price}, 
-             {descr: 'Last fw10PUNKUSD Price', content: Math.round(1/price)}, 
-             {descr: 'Last Long Token Value in Collateral', content: longCollateralValue}, 
+             {descr: 'Total Collateral Locked', content: `${tvl} ${collateralCurr}`},
+             {descr: 'Last ETHUSD Price', content: ethPrice},
+             {descr: 'Last USDfw10PUNK Price', content: price},
+             {descr: 'Last fw10PUNKUSD Price', content: Math.round(1/price)},
+             {descr: 'Last Long Token Value in Collateral', content: longCollateralValue},
              ]}
              renderItem={item => (
                <List.Item>
@@ -81,7 +81,9 @@ export default function BoredPunksApp(props) {
     <Row justify="center">
       <Space>
        <Col span={8}>
-          <BoredPunksPosition tx = {props.tx} address = {props.address} readContracts = {props.readContracts} writeContracts = {props.writeContracts} usdcBalance = {props.usdcBalance} longBalance = {props.longBalance} shortBalance = {props.shortBalance}/>
+          <BoredPunksPosition tx = {props.tx} address = {props.address} readContracts = {props.readContracts}
+            writeContracts = {props.writeContracts} usdcBalance = {props.usdcBalance} longBalance = {props.longBalance}
+             shortBalance = {props.shortBalance} pairsMinted={props.pairsMinted} colAllowance={props.colAllowance}/>
        </Col>
       </Space>
     </Row>

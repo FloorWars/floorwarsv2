@@ -12,8 +12,9 @@ export default function BoredPunksPosition(props) {
   let colBalance = props.usdcBalance ? utils.formatUnits(props.usdcBalance, 6) : 0;
   let longBalance = props.longBalance ? utils.formatUnits(props.longBalance, 6) : 0;
   let shortBalance = props.shortBalance ? utils.formatUnits(props.shortBalance, 6) : 0;
+  let pairsMinted = props.pairsMinted ? utils.formatUnits(props.pairsMinted, 6) : 0;
+  let colAllowance = props.colAllowance ? utils.formatUnits(props.colAllowance, 6) : 0;
 
-  console.log("my address: ", address)
 
   return (
     <div className="BoredPunksPosition">
@@ -27,7 +28,13 @@ export default function BoredPunksPosition(props) {
           <Text strong>Long Tokens:</Text>
           <br></br>
           <Text strong>Short Tokens:</Text>
-          <Button type="primary" block>Mint L/S Tokens</Button>
+          <br></br>
+          <Text strong>Pairs Minted:</Text>
+          <Button type="primary"
+            onClick={async () => {
+              const result = props.tx(props.writeContracts.LSP.create(10000000))
+            }}
+              block>Mint L/S Tokens</Button>
           <Button block>Settle L/S Tokens</Button>
         </Col>
         <Col span ={12}>
@@ -38,7 +45,13 @@ export default function BoredPunksPosition(props) {
           <Text strong>{longBalance}</Text>
           <br></br>
           <Text strong>{shortBalance}</Text>
-          <Button type="primary" danger block>
+          <br></br>
+          <Text strong>{pairsMinted}</Text>
+          <Button type="primary"
+            onClick={async () => {
+              const result = props.tx(props.writeContracts.LSP.redeem(10000000))
+            }}
+          danger block>
             Redeem
           </Button>
         </Col>

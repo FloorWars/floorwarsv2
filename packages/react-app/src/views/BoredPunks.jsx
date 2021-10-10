@@ -17,6 +17,8 @@ export default function BoredPunks({
   usdcBalance,
   longBalance,
   shortBalance,
+  pairsMinted,
+  colAllowance,
   tx,
   mainnetProvider,
   readContracts,
@@ -42,7 +44,7 @@ export default function BoredPunks({
          <Typography>
            <Title level={3}>USDfw10PUNKc800-1221 : CryptoPunks Floor Call Options</Title>
            <Paragraph>
-             <code>USDfw10PUNKc800-1221</code> is a covered call option on USD versus the Decile Floor CryptoPunks index price converted from ETH to USD. Token pairs are minted and collateralized by 1 USDC and represent 1 USDC worth of risk versus the price of USD in fw10PUNK at expiry. Long tokens expire worthless if more than $800,000 USDC is needed for 1 theoretical "fw10PUNK" otherwise are valued at the difference proportionate to the expiry price. For example, if fw10PUNKUSD (the inverse price) settles at $400,000 on December 31st, each long token will be worth: <code>(1/200000 - 1/800000)/(1/200000) = 0.75</code> so $0.75 USDC per token. Short tokens are worth the remainder of the $1 of collateral, e.g. <code>1 - 0.75 = 0.25</code> so $0.25. 
+             <code>USDfw10PUNKc800-1221</code> is a covered call option on USD versus the Decile Floor CryptoPunks index price converted from ETH to USD. Token pairs are minted and collateralized by 1 USDC and represent 1 USDC worth of risk versus the price of USD in fw10PUNK at expiry. Long tokens expire worthless if more than $800,000 USDC is needed for 1 theoretical "fw10PUNK" otherwise are valued at the difference proportionate to the expiry price. For example, if fw10PUNKUSD (the inverse price) settles at $400,000 on December 31st, each long token will be worth: <code>(1/200000 - 1/800000)/(1/200000) = 0.75</code> so $0.75 USDC per token. Short tokens are worth the remainder of the $1 of collateral, e.g. <code>1 - 0.75 = 0.25</code> so $0.25.
            </Paragraph>
            <Paragraph>Let's simulate how the long token settles as the USD price of 1 fw10PUNK changes.
            </Paragraph>
@@ -77,7 +79,9 @@ export default function BoredPunks({
            </Panel>
          </Collapse>
 
-          <BoredPunksApp address={address} price={price} tx={tx} readContracts={readContracts} writeContracts={writeContracts} usdcBalance={usdcBalance} longBalance = {longBalance} shortBalance = {shortBalance}/>
+          <BoredPunksApp address={address} price={price} tx={tx} readContracts={readContracts} writeContracts={writeContracts}
+           usdcBalance={usdcBalance} longBalance = {longBalance} shortBalance = {shortBalance} pairsMinted = {pairsMinted}
+           colAllowance={colAllowance}/>
          <SwapInfo tx={tx} readContracts={readContracts} writeContracts={writeContracts} />
        </div>
      </Content>
