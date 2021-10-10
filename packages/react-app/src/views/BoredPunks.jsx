@@ -1,12 +1,14 @@
 import { SyncOutlined } from "@ant-design/icons";
 import { utils } from "ethers";
-import { Button, Card, DatePicker, Divider, Input, List, Progress, Slider, Spin, Switch, Layout, Menu, Breadcrumb } from "antd";
+import { Button, Card, Collapse, DatePicker, Divider, Input, List, Progress, Slider, Spin, Steps, Switch, Layout, Menu, Breadcrumb } from "antd";
 import React, { useState } from "react";
 import { Address, Balance, BoredPunksApp, SwapInfo } from "../components";
 import { useContractReader } from "eth-hooks"
 import "../BoredPunks.css"
 
 const { Header, Content, Footer } = Layout;
+const { Step } = Steps;
+const { Panel } = Collapse;
 
 export default function BoredPunks({
   address,
@@ -33,9 +35,17 @@ export default function BoredPunks({
     <Layout className="layout">
      <Header>
 
-
      </Header>
      <Content style={{ padding: '0 50px' }}>
+       <Collapse defaultActiveKey={['1']} >
+         <Panel header="Steps to create a synthetic position on CryptoPunks" key="1">
+           <Steps direction="vertical" current={0}>
+             <Step title="Create Position" description="Lock up collateral (USDC)to mint long and short synth tokens representing a covered call option." />
+             <Step title="Sell Tokens" description="Take a long or short position by selling tokens to speculators. No need to worry about liquidation as positions are always fully collateralized." />
+             <Step title="Redeem" description="After expiry, redeem remaining or purchased tokens for collateral." />
+           </Steps>
+         </Panel>
+       </Collapse>
 
        <div className="site-layout-content">
           <BoredPunksApp address={address} price={price} tx={tx} readContracts={readContracts} writeContracts={writeContracts} usdcBalance={usdcBalance} longBalance = {longBalance} shortBalance = {shortBalance}/>
