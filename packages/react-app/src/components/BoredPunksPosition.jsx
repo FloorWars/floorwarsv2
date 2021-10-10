@@ -10,6 +10,8 @@ export default function BoredPunksPosition(props) {
   let address = props.address;
   let positionTokens = [];
   let colBalance = props.usdcBalance ? utils.formatUnits(props.usdcBalance, 6) : 0;
+  let longBalance = props.longBalance ? utils.formatUnits(props.longBalance, 6) : 0;
+  let shortBalance = props.shortBalance ? utils.formatUnits(props.shortBalance, 6) : 0;
 
   console.log("my address: ", address)
 
@@ -33,7 +35,9 @@ export default function BoredPunksPosition(props) {
         <br></br>
         <Text strong>{colBalance}</Text>
         <br></br>
-        <Text strong>{positionTokens[0]}</Text>
+        <Text strong>{longBalance}</Text>
+        <br></br>
+        <Text strong>{shortBalance}</Text>
         </Col>
         <Col span = {2}>
           <Text strong>/</Text>
