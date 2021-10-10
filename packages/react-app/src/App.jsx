@@ -467,6 +467,7 @@ function App(props) {
       <Header />
       {networkDisplay}
       <BrowserRouter>
+        {/*
         <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
           <Menu.Item key="/">
             <Link
@@ -475,10 +476,9 @@ function App(props) {
               }}
               to="/"
             >
-              YourContract
+              Home
             </Link>
           </Menu.Item>
-
 
           <Menu.Item key="/mainnetdai">
               <Link
@@ -551,24 +551,9 @@ function App(props) {
               </Link>
             </Menu.Item>
           </Menu>
+        */}
 
         <Switch>
-          <Route exact path="/">
-            {/*
-                🎛 this scaffolding is full of commonly used components
-                this <Contract/> component will automatically parse your ABI
-                and give you a form to interact with it locally
-            */}
-
-            <Contract
-              name="YourContract"
-              signer={userSigner}
-              provider={localProvider}
-              address={address}
-              blockExplorer={blockExplorer}
-              contractConfig={contractConfig}
-            />
-          </Route>
           <Route path="/hints">
             <Hints
               address={address}
@@ -667,7 +652,7 @@ function App(props) {
               chainId={targetNetwork.chainId}
             />
           </Route>
-          <Route path="/BOREDPUNKS">
+          <Route path="/">
             <BoredPunks
               address={address}
               price={price}
