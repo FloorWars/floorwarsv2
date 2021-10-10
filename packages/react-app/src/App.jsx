@@ -77,7 +77,7 @@ if (DEBUG) console.log("📡 Connecting to Mumbai Testnet");
 // const mainnetInfura = navigator.onLine
 //   ? new ethers.providers.StaticJsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
 //   : null;
-const mumbaiProvider = new ethers.providers.StaticJsonRpcProvider("https://speedy-nodes-nyc.moralis.io/d376b2384f04b47cf322a1c2/polygon/mumbai")
+const mumbaiProvider = new ethers.providers.StaticJsonRpcProvider(targetNetwork.rpcUrl)
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID
 // 🏠 Your local provider is usually pointed at your local blockchain
 const localProviderUrl = targetNetwork.rpcUrl;
@@ -230,10 +230,10 @@ function App(props) {
   const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} };
 
   // Load in your local 📝 contract and read a value from it:
-  const readContracts = useContractLoader(localProvider, contractConfig);
+  const readContracts = useContractLoader(mainnetProvider, contractConfig);
 
   // If you want to make 🔐 write transactions to your contracts, use the userSigner:
-  const writeContracts = useContractLoader(userSigner, contractConfig, localChainId);
+  const writeContracts = useContractLoader(userSigner, contractConfig, targetNetwork.chainId);
 
   // EXTERNAL CONTRACT EXAMPLE:
   //
@@ -247,8 +247,34 @@ function App(props) {
 
   // Then read your DAI balance like:
   const myMainnetDAIBalance = useContractReader(mainnetContracts, "DAI", "balanceOf", [
-    "0x34aA3F359A9D614239015126635CE7732c18fDF3",
+    address,
   ]);
+
+  const myMainnetUSDCBalance = useContractReader(mainnetContracts, "USDC", "balanceOf", [
+    address,
+  ]);
+
+  const lspTokenBalance = useContractReader(mainnetContracts, "LSP", "getPositionTokens", [
+    address,
+  ]);
+  let pairsMinted = 0;
+  if (lspTokenBalance) {
+    pairsMinted = lspTokenBalance[0]
+  }
+
+  const longBalance = useContractReader(mainnetContracts, "LONG", "balanceOf", [
+    address,
+  ])
+
+  const shortBalance = useContractReader(mainnetContracts, "SHORT", "balanceOf", [
+    address,
+  ])
+
+
+  const colAllowance = useContractReader(mainnetContracts, "USDC", "allowance", [
+    address,
+    "0xfb75cceBe6aea69F041d401bb66F02d187cB0ECF"
+  ])
 
   // keep track of a variable from the contract in the local React state:
   const purpose = useContractReader(readContracts, "YourContract", "purpose");
@@ -452,6 +478,7 @@ function App(props) {
       <Header />
       {networkDisplay}
       <BrowserRouter>
+        {/*
         <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
           <Menu.Item key="/">
             <Link
@@ -460,29 +487,10 @@ function App(props) {
               }}
               to="/"
             >
-              YourContract
+              Home
             </Link>
           </Menu.Item>
-          <Menu.Item key="/hints">
-            <Link
-              onClick={() => {
-                setRoute("/hints");
-              }}
-              to="/hints"
-            >
-              Hints
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/exampleui">
-            <Link
-              onClick={() => {
-                setRoute("/exampleui");
-              }}
-              to="/exampleui"
-            >
-              ExampleUI
-            </Link>
-          </Menu.Item>
+
           <Menu.Item key="/mainnetdai">
               <Link
                 onClick={() => {
@@ -523,6 +531,26 @@ function App(props) {
                 Mumbai LSP
               </Link>
             </Menu.Item>
+            <Menu.Item key="/lspLongToken">
+              <Link
+                onClick={() => {
+                  setRoute("/lspLongToken");
+                }}
+                to="/lspLongToken"
+              >
+                LSP Long Token
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/lspShortToken">
+              <Link
+                onClick={() => {
+                  setRoute("/lspShortToken");
+                }}
+                to="/lspShortToken"
+              >
+                LSP Short Token
+              </Link>
+            </Menu.Item>
             <Menu.Item key="/BOREDPUNKS">
               <Link
                 onClick={() => {
@@ -534,24 +562,9 @@ function App(props) {
               </Link>
             </Menu.Item>
           </Menu>
+        */}
 
         <Switch>
-          <Route exact path="/">
-            {/*
-                🎛 this scaffolding is full of commonly used components
-                this <Contract/> component will automatically parse your ABI
-                and give you a form to interact with it locally
-            */}
-
-            <Contract
-              name="YourContract"
-              signer={userSigner}
-              provider={localProvider}
-              address={address}
-              blockExplorer={blockExplorer}
-              contractConfig={contractConfig}
-            />
-          </Route>
           <Route path="/hints">
             <Hints
               address={address}
@@ -582,9 +595,9 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://etherscan.io"
+              blockExplorer={targetNetwork.blockExplorer}
               contractConfig={contractConfig}
-              chainId={80001}
+              chainId={targetNetwork.chainId}
             />
             {/*
 
@@ -597,9 +610,9 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://etherscan.io/"
+              blockExplorer={targetNetwork.blockExplorer}
               contractConfig={contractConfig}
-              chainId={80001}
+              chainId={targetNetwork.chainId}
             />
           </Route>
           <Route path="/mainnetusdc">
@@ -609,9 +622,9 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://etherscan.io/"
+              blockExplorer={targetNetwork.blockExplorer}
               contractConfig={contractConfig}
-              chainId={80001}
+              chainId={targetNetwork.chainId}
             />
           </Route>
           <Route path="/mainnetlsp">
@@ -621,17 +634,44 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://mumbai.polygonscan.com/"
+              blockExplorer={targetNetwork.blockExplorer}
               contractConfig={contractConfig}
-              chainId={80001}
+              chainId={targetNetwork.chainId}
             />
           </Route>
-          <Route path="/BOREDPUNKS">
+          <Route path="/lspLongToken">
+            <Contract
+              name="LONG"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.LONG}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer={targetNetwork.blockExplorer}
+              contractConfig={contractConfig}
+              chainId={targetNetwork.chainId}
+            />
+          </Route>
+          <Route path="/lspShortToken">
+            <Contract
+              name="SHORT"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.SHORT}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer={targetNetwork.blockExplorer}
+              contractConfig={contractConfig}
+              chainId={targetNetwork.chainId}
+            />
+          </Route>
+          <Route path="/">
             <BoredPunks
               address={address}
-              // usdcBalance={usdcBalance}
-              // longBalance={longBalance}
-              // shortBalance={shortBalance}
+              price={price}
+              usdcBalance={myMainnetUSDCBalance}
+              longBalance={longBalance}
+              shortBalance={shortBalance}
+              pairsMinted={pairsMinted}
+              colAllowance={colAllowance}
               tx={tx}
               mainnetProvider={mainnetProvider}
               readContracts={readContracts}
@@ -641,7 +681,7 @@ function App(props) {
         </Switch>
       </BrowserRouter>
 
-      <ThemeSwitch />
+      {/*<ThemeSwitch />*/}
 
       {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
       <div style={{ position: "fixed", textAlign: "right", right: 0, top: 0, padding: 10 }}>
@@ -659,45 +699,6 @@ function App(props) {
         {faucetHint}
       </div>
 
-      {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-      <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={8}>
-            <Ramp price={price} address={address} networks={NETWORKS} />
-          </Col>
-
-          <Col span={8} style={{ textAlign: "center", opacity: 0.8 }}>
-            <GasGauge gasPrice={gasPrice} />
-          </Col>
-          <Col span={8} style={{ textAlign: "center", opacity: 1 }}>
-            <Button
-              onClick={() => {
-                window.open("https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA");
-              }}
-              size="large"
-              shape="round"
-            >
-              <span style={{ marginRight: 8 }} role="img" aria-label="support">
-                💬
-              </span>
-              Support
-            </Button>
-          </Col>
-        </Row>
-
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={24}>
-            {
-              /*  if the local provider has a signer, let's show the faucet:  */
-              faucetAvailable ? (
-                <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
-              ) : (
-                ""
-              )
-            }
-          </Col>
-        </Row>
-      </div>
     </div>
   );
 }

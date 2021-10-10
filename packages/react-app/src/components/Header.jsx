@@ -1,14 +1,15 @@
 import { PageHeader } from "antd";
 import React from "react";
 
+
 // displays a page header
 
 export default function Header() {
   return (
-    <a href="https://github.com/austintgriffith/scaffold-eth" target="_blank" rel="noopener noreferrer">
+    <a href="https://floorwars.github.io" target="_blank" rel="noopener noreferrer">
       <PageHeader
-        title="🏗 scaffold-eth"
-        subTitle="forkable Ethereum dev stack focused on fast product iteration"
+        title={(<img src='/logo.png' width='200' />)} 
+        subTitle="Synthetic NFT Floor Derivatives"
         style={{ cursor: "pointer" }}
       />
     </a>

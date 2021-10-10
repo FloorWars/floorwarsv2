@@ -1,21 +1,29 @@
 import { SyncOutlined } from "@ant-design/icons";
 import { utils } from "ethers";
-import { Button, Card, DatePicker, Divider, Input, List, Progress, Slider, Spin, Switch } from "antd";
+import { Button, Card, Col, Collapse, DatePicker, Divider, Input, InputNumber, List, Progress, Row, Slider, Spin, Steps, Switch, Typography, Layout, Menu, Breadcrumb } from "antd";
 import React, { useState } from "react";
-import { Address, Balance, AvailableCollateral } from "../components";
+import { Address, Balance, BoredPunksApp, SwapInfo } from "../components";
 import { useContractReader } from "eth-hooks"
+import "../BoredPunks.css"
+
+const { Header, Content, Footer } = Layout;
+const { Step } = Steps;
+const { Panel } = Collapse;
+const { Title, Paragraph, Text, Link } = Typography;
 
 export default function BoredPunks({
   address,
-  // usdcBalance,
-  // longBalance,
-  // shortBalance,
+  price,
+  usdcBalance,
+  longBalance,
+  shortBalance,
+  pairsMinted,
+  colAllowance,
   tx,
   mainnetProvider,
   readContracts,
   writeContracts,
 }) {
-  const [amount, setNewAmount] = useState(0);
   // const [longAmount, setLongAmount] = useState(0);
   // const [shortAmount, setShortAmount] = useState(0);
 
@@ -23,163 +31,63 @@ export default function BoredPunks({
   // const formattedShort = shortBalance / (10**6)
   // const formattedBalance = usdcBalance / (10**6)
 
+  const [slideAmount, setSlideAmount] = useState(400000);
 
   return (
-    <div>
-      {/*
-        ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
-      */}
-      <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
-        <AvailableCollateral address = {address} />
 
-        <h2>BoredPunks:</h2>
-        <h4>Collateral Amount (USDC) :</h4>
-        <Divider />
-        <div style={{ margin: 8 }}>
-          <Input
-            placeholder="Leave empty to mint maximum"
-            onChange={e => {
-              setNewAmount(e.target.value);
-            }}
-          />
-          <Button
-            style={{ marginTop: 8 }}
-            onClick={async () => {
-              /* look how you call setPurpose on your contract: */
-            /* notice how you pass a call back for tx updates too */
-              let modAmount
-              let colPair = await readContracts.LSP.collateralPerPair()
-              colPair = colPair / (10**12)
+    <Layout className="layout">
+     <Header>
+       <h1 style={{color:'white'}}>FloorWars Synthetics - USD vs CryptoPunks Decile Floor</h1>
+     </Header>
+     <Content style={{ padding: '0 50px' }}>
+       <div className="site-layout-content">
+         <Typography>
+           <Title level={3}>USDfw10PUNKc800-1221 : CryptoPunks Floor Call Options</Title>
+           <Paragraph>
+             <code>USDfw10PUNKc800-1221</code> is a covered call option on USD versus the Decile Floor CryptoPunks index price converted from ETH to USD. Token pairs are minted and collateralized by 1 USDC and represent 1 USDC worth of risk versus the price of USD in fw10PUNK at expiry. Long tokens expire worthless if more than $800,000 USDC is needed for 1 theoretical "fw10PUNK" otherwise are valued at the difference proportionate to the expiry price. For example, if fw10PUNKUSD (the inverse price) settles at $400,000 on December 31st, each long token will be worth: <code>(1/200000 - 1/800000)/(1/200000) = 0.75</code> so $0.75 USDC per token. Short tokens are worth the remainder of the $1 of collateral, e.g. <code>1 - 0.75 = 0.25</code> so $0.25.
+           </Paragraph>
+           <Paragraph>Let's simulate how the long token settles as the USD price of 1 fw10PUNK changes.
+           </Paragraph>
+           <Row>
+             <Col span={12}>
+               <Slider
+                 min={1}
+                 max={800000}
+                 onChange={setSlideAmount}
+                 value={typeof slideAmount === 'number' ? slideAmount : 1}
+               />
+             </Col>
+             <Col span={4}>
+               <InputNumber
+                 min={1}
+                 max={800000}
+                 style={{ margin: '0 16px' }}
+                 value={slideAmount}
+                 onChange={setSlideAmount}
+               />
+             </Col>
+            <Paragraph>1 Long token is worth: { (1/slideAmount - 1/800000)/(1/slideAmount) } of $1 collateral</Paragraph>
+           </Row>
+         </Typography>
+         <Collapse defaultActiveKey={['1']} >
+           <Panel header="Steps to create a synthetic position on CryptoPunks" key="1">
+             <Steps direction="vertical" current={0}>
+               <Step title="Create Position" description="Lock up collateral (USDC)to mint long and short synth tokens representing a covered call option." />
+               <Step title="Sell Tokens" description="Take a long or short position by selling tokens to speculators. No need to worry about liquidation as positions are always fully collateralized." />
+               <Step title="Redeem" description="After expiry, redeem remaining or purchased tokens for collateral." />
+             </Steps>
+           </Panel>
+         </Collapse>
 
-              if(amount === 0) {
-                let lspAddress = readContracts.LSP.address
-                let newAmount =  await readContracts.USDC.allowance(
-                  address,
-                  lspAddress
-                )
+          <BoredPunksApp address={address} price={price} tx={tx} readContracts={readContracts} writeContracts={writeContracts}
+           usdcBalance={usdcBalance} longBalance = {longBalance} shortBalance = {shortBalance} pairsMinted = {pairsMinted}
+           colAllowance={colAllowance}/>
+         <SwapInfo tx={tx} readContracts={readContracts} writeContracts={writeContracts} />
+       </div>
+     </Content>
+   </Layout>
 
-                let balance = await readContracts.USDC.balanceOf(address)
 
-                if(newAmount >= balance) {
-                  modAmount = balance / colPair
-
-                } else {
-                  modAmount = newAmount / colPair
-                }
-
-              } else {
-                modAmount = amount
-              }
-
-              modAmount *= (10**6)
-
-              const result = tx(writeContracts.LSP.create(modAmount), update => {
-                console.log("📡 Transaction Update:", update);
-                if (update && (update.status === "confirmed" || update.status === 1)) {
-                  console.log(" 🍾 Transaction " + update.hash + " finished!");
-                  console.log(
-                    " ⛽️ " +
-                      update.gasUsed +
-                      "/" +
-                      (update.gasLimit || update.gas) +
-                      " @ " +
-                      parseFloat(update.gasPrice) / 1000000000 +
-                      " gwei",
-                  );
-                }
-              });
-              console.log("awaiting metamask/web3 confirm result...", result);
-              console.log(await result);
-            }}
-          >
-            Create Synths!
-          </Button>
-          <Button
-            onClick={() => {
-              let modAmount = amount * (10**6)
-              /* look how we call setPurpose AND send some value along */
-              tx(
-                writeContracts.LSP.redeem(modAmount),
-              );
-              /* this will fail until you make the setPurpose function payable */
-            }}
-          >
-            Redeem
-          </Button>
-          <Button
-            onClick={() => {
-              /* look how we call setPurpose AND send some value along */
-              tx(
-                writeContracts.LSP.expire()
-              );
-              /* this will fail until you make the setPurpose function payable */
-            }}
-          >
-            Expire
-          </Button>
-
-        </div>
-        <span>USDC Balance: </span>
-
-          <div style={{ margin: 8 }}>
-            <Input
-              onChange={e => {
-                setLongAmount(e.target.value);
-              }}
-              placeholder="long amount"
-            />
-            <Input
-              onChange={e => {
-                setShortAmount(e.target.value);
-              }}
-              placeholder="short amount"
-            />
-            <Button
-              style={{ marginTop: 8 }}
-              onClick={async () => {
-                /* look how you call setPurpose on your contract: */
-                /* notice how you pass a call back for tx updates too */
-                 let modLong
-                 let modShort
-                //
-                // if (longAmount === 0) {
-                //   modLong = longBalance
-                // } else {
-                //   modLong = longAmount * (10**6)
-                // }
-                // if (shortAmount ===0) {
-                //   modShort = shortBalance
-                // } else {
-                //   modShort = shortAmount * (10**6)
-                // }
-
-                const result = tx(writeContracts.LSP.settle(modLong, modShort), update => {
-                  console.log("📡 Transaction Update:", update);
-                  if (update && (update.status === "confirmed" || update.status === 1)) {
-                    console.log(" 🍾 Transaction " + update.hash + " finished!");
-                    console.log(
-                      " ⛽️ " +
-                        update.gasUsed +
-                        "/" +
-                        (update.gasLimit || update.gas) +
-                        " @ " +
-                        parseFloat(update.gasPrice) / 1000000000 +
-                        " gwei",
-                    );
-                  }
-                });
-                console.log("awaiting metamask/web3 confirm result...", result);
-                console.log(await result);
-              }}
-            >
-              Settle
-            </Button>
-          </div>
-          <span>Short Balance: </span>
-          <br></br>
-          <span>Long Balance: </span>
-        </div>
-    </div>
 
 
   );
