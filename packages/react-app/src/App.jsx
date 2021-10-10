@@ -478,26 +478,8 @@ function App(props) {
               YourContract
             </Link>
           </Menu.Item>
-          <Menu.Item key="/hints">
-            <Link
-              onClick={() => {
-                setRoute("/hints");
-              }}
-              to="/hints"
-            >
-              Hints
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/exampleui">
-            <Link
-              onClick={() => {
-                setRoute("/exampleui");
-              }}
-              to="/exampleui"
-            >
-              ExampleUI
-            </Link>
-          </Menu.Item>
+
+
           <Menu.Item key="/mainnetdai">
               <Link
                 onClick={() => {
@@ -536,6 +518,26 @@ function App(props) {
                 to="/mainnetlsp"
               >
                 Mumbai LSP
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/lspLongToken">
+              <Link
+                onClick={() => {
+                  setRoute("/lspLongToken");
+                }}
+                to="/lspLongToken"
+              >
+                LSP Long Token
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="/lspShortToken">
+              <Link
+                onClick={() => {
+                  setRoute("/lspShortToken");
+                }}
+                to="/lspShortToken"
+              >
+                LSP Short Token
               </Link>
             </Menu.Item>
             <Menu.Item key="/BOREDPUNKS">
@@ -597,9 +599,9 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://etherscan.io"
+              blockExplorer={targetNetwork.blockExplorer}
               contractConfig={contractConfig}
-              chainId={80001}
+              chainId={targetNetwork.chainId}
             />
             {/*
 
@@ -612,9 +614,9 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://etherscan.io/"
+              blockExplorer={targetNetwork.blockExplorer}
               contractConfig={contractConfig}
-              chainId={80001}
+              chainId={targetNetwork.chainId}
             />
           </Route>
           <Route path="/mainnetusdc">
@@ -624,9 +626,9 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://etherscan.io/"
+              blockExplorer={targetNetwork.blockExplorer}
               contractConfig={contractConfig}
-              chainId={80001}
+              chainId={targetNetwork.chainId}
             />
           </Route>
           <Route path="/mainnetlsp">
@@ -636,9 +638,33 @@ function App(props) {
               signer={userSigner}
               provider={mainnetProvider}
               address={address}
-              blockExplorer="https://mumbai.polygonscan.com/"
+              blockExplorer={targetNetwork.blockExplorer}
               contractConfig={contractConfig}
-              chainId={80001}
+              chainId={targetNetwork.chainId}
+            />
+          </Route>
+          <Route path="/lspLongToken">
+            <Contract
+              name="lspLongToken"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.LONG}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer={targetNetwork.blockExplorer}
+              contractConfig={contractConfig}
+              chainId={targetNetwork.chainId}
+            />
+          </Route>
+          <Route path="/lspShortToken">
+            <Contract
+              name="lspShortToken"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.SHORT}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer={targetNetwork.blockExplorer}
+              contractConfig={contractConfig}
+              chainId={targetNetwork.chainId}
             />
           </Route>
           <Route path="/BOREDPUNKS">

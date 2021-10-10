@@ -30,38 +30,20 @@ export default function BoredPunksPosition(props) {
           <Button type="primary" block>Mint L/S Tokens</Button>
           <Button block>Settle L/S Tokens</Button>
         </Col>
-        <Col span ={4}>
-        <br></br>
-        <br></br>
-        <Text strong>{colBalance}</Text>
-        <br></br>
-        <Text strong>{longBalance}</Text>
-        <br></br>
-        <Text strong>{shortBalance}</Text>
-        </Col>
-        <Col span = {2}>
-          <Text strong>/</Text>
+        <Col span ={12}>
           <br></br>
           <br></br>
-          <Text strong>/</Text>
+          <Text strong>{colBalance}</Text>
           <br></br>
-          <Text strong>/</Text>
+          <Text strong>{longBalance}</Text>
           <br></br>
-          <Text strong>/</Text>
-        </Col>
-        <Col span = {6}>
-          <Text strong>Position</Text>
-          <br></br>
-          <br></br>
-          <Text strong>10</Text>
-          <br></br>
-          <Text strong>10 Minted</Text>
-          <br></br>
-          <Text strong>10 Minted</Text>
+          <Text strong>{shortBalance}</Text>
           <Button type="primary" danger block>
             Redeem
           </Button>
         </Col>
+
+
       </Row>
     </div>
 

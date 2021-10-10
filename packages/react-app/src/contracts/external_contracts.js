@@ -1642,11 +1642,11 @@ module.exports = {
         abi: LSPABI,
       },
       SHORT: {
-        address: "0xfb75cceBe6aea69F041d401bb66F02d187cB0ECF",
+        address: "0x9189a9BEFa7E0799d2470b49948588C14B7A1036",
         abi: ERC20ABI,
       },
       LONG: {
-        address: "0xfb75cceBe6aea69F041d401bb66F02d187cB0ECF",
+        address: "0xf497360850367A9F17738392f48080f951959e8C",
         abi: ERC20ABI,
       },
     },
