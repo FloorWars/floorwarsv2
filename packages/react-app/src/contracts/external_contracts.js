@@ -1638,15 +1638,15 @@ module.exports = {
         abi: ERC20ABI,
       },
       LSP: {
-        address: "0x13Ca6Dd8D890E5043A4912fC218c98c1b72BE350",
+        address: "0xfb75cceBe6aea69F041d401bb66F02d187cB0ECF",
         abi: LSPABI,
       },
       SHORT: {
-        address: "0x4110F168f25c583A913Ee348d52d3D9FFb43FA73",
+        address: "0xfb75cceBe6aea69F041d401bb66F02d187cB0ECF",
         abi: ERC20ABI,
       },
       LONG: {
-        address: "0x5B152d9A63D8d99F9d21eC9704ed5679D21E9a4B",
+        address: "0xfb75cceBe6aea69F041d401bb66F02d187cB0ECF",
         abi: ERC20ABI,
       },
     },
