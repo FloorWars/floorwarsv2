@@ -33,12 +33,11 @@ export default function BoredPunksApp(props) {
 
   }, []);
 
-  return (
+  return (<div>
 
     <Row justify="center">
-
       <Space>
-       <Col span={7}>
+       <Col span={3}>
 
          <div className="ProductDiv">
            <Divider >Product Info</Divider>
@@ -55,6 +54,10 @@ export default function BoredPunksApp(props) {
                </List.Item>
              )}
            />
+         </div>
+       </Col>
+       <Col span={3}>
+         <div className="ProductDiv">
            <Divider >Live Price Data</Divider>
            <List itemLayout="horizontal" dataSource={[
              {descr: 'Total Collateral Locked', content: `${tvl} ${collateralCurr}`}, 
@@ -73,7 +76,10 @@ export default function BoredPunksApp(props) {
          </div>
 
        </Col>
-
+      </Space>
+    </Row>
+    <Row justify="center">
+      <Space>
        <Col span={8}>
           <BoredPunksPosition tx = {props.tx} address = {props.address} readContracts = {props.readContracts} writeContracts = {props.writeContracts} usdcBalance = {props.usdcBalance} longBalance = {props.longBalance} shortBalance = {props.shortBalance}/>
        </Col>
@@ -82,7 +88,7 @@ export default function BoredPunksApp(props) {
 
 
 
-
+  </div>
   );
 
 }
