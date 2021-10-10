@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 const { utils } = require("ethers");
 import { Row, Col, Layout, Menu, Breadcrumb, Typography, Space } from "antd";
 import "./BoredPunks.css";
@@ -9,6 +9,17 @@ const { Title, Paragraph, Text, Link } = Typography;
 
 export default function BoredPunksApp(props) {
 
+  const expiry = 'December 31, 2021';
+  const collateralCurr = 'USDC';
+  const tvl = '123123';
+
+  const [price, setPrice] = useState(0);
+ 
+  useEffect(async () => {
+    const result = await fetch( '/demoprice.json');
+    const newPrice = await result.json();
+    setPrice(parseFloat(newPrice.USDfl10PUNK));
+  }, []);
 
   return (
 
@@ -22,13 +33,15 @@ export default function BoredPunksApp(props) {
           <Text strong>Full Name: long kilo-USD short Decile FloorWars CryptoPunks Covered Call 700 Strike Exp. 12/2021</Text>
           <br></br>
           <br></br>
-          <Text strong>Expiration: 12/31/2021</Text>
+          <Text strong>Expiration: {expiry}</Text>
           <br></br>
-          <Text strong>Collateral: WETH</Text>
+          <Text strong>Collateral: {collateralCurr}</Text>
           <br></br>
-          <Text strong>Total Collateral Locked: 1000 WETH</Text>
+          <Text strong>Total Collateral Locked: {tvl} {collateralCurr}</Text>
           <br></br>
-          <Text strong>Last Price: 1/120</Text>
+          <Text strong>Last USDfl10PUNK Price: {price}</Text>
+          <br></br>
+          <Text strong>Last fl10PUNKUSD Price: {Math.round(1/price)}</Text>
           <br></br>
           <Text strong>Total L/S tokens outstanding: 1000</Text>
          </div>
