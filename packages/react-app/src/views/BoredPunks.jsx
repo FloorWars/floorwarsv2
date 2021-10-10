@@ -35,12 +35,12 @@ export default function BoredPunks({
 
     <Layout className="layout">
      <Header>
+       <h1 style={{color:'white'}}>FloorWars Synthetics - USD vs CryptoPunks Decile Floor</h1>
      </Header>
      <Content style={{ padding: '0 50px' }}>
        <div className="site-layout-content">
          <Typography>
-           <Title>FloorWars Synthetics</Title>
-           <Title level={4}>USDfw10PUNKc800-1221 : CryptoPunks Floor Call Options</Title>
+           <Title level={3}>USDfw10PUNKc800-1221 : CryptoPunks Floor Call Options</Title>
            <Paragraph>
              <code>USDfw10PUNKc800-1221</code> is a covered call option on USD versus the Decile Floor CryptoPunks index price converted from ETH to USD. Token pairs are minted and collateralized by 1 USDC and represent 1 USDC worth of risk versus the price of USD in fw10PUNK at expiry. Long tokens expire worthless if more than $800,000 USDC is needed for 1 theoretical "fw10PUNK" otherwise are valued at the difference proportionate to the expiry price. For example, if fw10PUNKUSD (the inverse price) settles at $400,000 on December 31st, each long token will be worth: <code>(1/200000 - 1/800000)/(1/200000) = 0.75</code> so $0.75 USDC per token. Short tokens are worth the remainder of the $1 of collateral, e.g. <code>1 - 0.75 = 0.25</code> so $0.25. 
            </Paragraph>
