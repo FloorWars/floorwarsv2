@@ -77,7 +77,7 @@ if (DEBUG) console.log("📡 Connecting to Mumbai Testnet");
 // const mainnetInfura = navigator.onLine
 //   ? new ethers.providers.StaticJsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
 //   : null;
-const mumbaiProvider = new ethers.providers.StaticJsonRpcProvider("https://speedy-nodes-nyc.moralis.io/d376b2384f04b47cf322a1c2/polygon/mumbai")
+const mumbaiProvider = new ethers.providers.StaticJsonRpcProvider(targetNetwork.rpcUrl)
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID
 // 🏠 Your local provider is usually pointed at your local blockchain
 const localProviderUrl = targetNetwork.rpcUrl;
@@ -230,10 +230,10 @@ function App(props) {
   const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} };
 
   // Load in your local 📝 contract and read a value from it:
-  const readContracts = useContractLoader(localProvider, contractConfig);
+  const readContracts = useContractLoader(mainnetProvider, contractConfig);
 
   // If you want to make 🔐 write transactions to your contracts, use the userSigner:
-  const writeContracts = useContractLoader(userSigner, contractConfig, localChainId);
+  const writeContracts = useContractLoader(userSigner, contractConfig, targetNetwork.chainId);
 
   // EXTERNAL CONTRACT EXAMPLE:
   //
@@ -247,8 +247,14 @@ function App(props) {
 
   // Then read your DAI balance like:
   const myMainnetDAIBalance = useContractReader(mainnetContracts, "DAI", "balanceOf", [
-    "0x34aA3F359A9D614239015126635CE7732c18fDF3",
+    address,
   ]);
+
+  const myMainnetUSDCBalance = useContractReader(mainnetContracts, "USDC", "balanceOf", [
+    address,
+  ]);
+
+
 
   // keep track of a variable from the contract in the local React state:
   const purpose = useContractReader(readContracts, "YourContract", "purpose");
@@ -629,9 +635,8 @@ function App(props) {
           <Route path="/BOREDPUNKS">
             <BoredPunks
               address={address}
-              // usdcBalance={usdcBalance}
-              // longBalance={longBalance}
-              // shortBalance={shortBalance}
+              usdcBalance={myMainnetUSDCBalance}
+              // longShortBalance={longShortBalance}
               tx={tx}
               mainnetProvider={mainnetProvider}
               readContracts={readContracts}

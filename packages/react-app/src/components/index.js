@@ -19,3 +19,4 @@ export { default as Wallet } from "./Wallet";
 export { default as L2Bridge } from "./L2Bridge";
 export { default as BoredPunksApp } from "./BoredPunksApp";
 export { default as CollateralInfo } from "./CollateralInfo";
+export { default as BoredPunksPosition } from "./BoredPunksPosition";
