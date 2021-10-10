@@ -1,9 +1,12 @@
 import { SyncOutlined } from "@ant-design/icons";
 import { utils } from "ethers";
-import { Button, Card, DatePicker, Divider, Input, List, Progress, Slider, Spin, Switch } from "antd";
+import { Button, Card, DatePicker, Divider, Input, List, Progress, Slider, Spin, Switch, Layout, Menu, Breadcrumb } from "antd";
 import React, { useState } from "react";
-import { Address, Balance, AvailableCollateral } from "../components";
+import { Address, Balance, BoredPunksApp } from "../components";
 import { useContractReader } from "eth-hooks"
+import "../BoredPunks.css"
+
+const { Header, Content, Footer } = Layout;
 
 export default function BoredPunks({
   address,
@@ -26,8 +29,20 @@ export default function BoredPunks({
 
   return (
 
+    <Layout className="layout">
+     <Header>
 
-    <AvailableCollateral address = {address} />
+
+     </Header>
+     <Content style={{ padding: '0 50px' }}>
+
+       <div className="site-layout-content">
+          <BoredPunksApp address = {address} />
+       </div>
+     </Content>
+     <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+   </Layout>
+
 
 
 
