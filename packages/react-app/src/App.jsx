@@ -635,6 +635,7 @@ function App(props) {
           <Route path="/BOREDPUNKS">
             <BoredPunks
               address={address}
+              price={price}
               usdcBalance={myMainnetUSDCBalance}
               // longShortBalance={longShortBalance}
               tx={tx}

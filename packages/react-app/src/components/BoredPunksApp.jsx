@@ -11,14 +11,19 @@ export default function BoredPunksApp(props) {
 
   const expiry = 'December 31, 2021';
   const collateralCurr = 'USDC';
-  const tvl = '123123';
+  const strike = '800000';
+  const tvl = '123123'; // TODO
+  const ethPrice = props.price ? (props.price == 1 ? 3500 : props.price) : 3500; // XXX $1 on Mumbai
 
   const [price, setPrice] = useState(0);
  
   useEffect(async () => {
     const result = await fetch( '/demoprice.json');
     const newPrice = await result.json();
-    setPrice(parseFloat(newPrice.USDfl10PUNK));
+    // setPrice(parseFloat(newPrice.USDfl10PUNK));
+    // use ETH price and convert
+    setPrice(ethPrice * parseFloat(newPrice.ETHfl10PUNK));
+
   }, []);
 
   return (
@@ -29,15 +34,18 @@ export default function BoredPunksApp(props) {
        <Col span={7}>
 
          <div className="ProductDiv">
-          <Title level = {5}>Product: kUSDfw10PUNKc700-1221 </Title>
-          <Text strong>Full Name: long kilo-USD short Decile FloorWars CryptoPunks Covered Call 700 Strike Exp. 12/2021</Text>
+          <Title level = {5}>Product: USDfw10PUNKc800000-1221 </Title>
+          <Text strong>Full Name: USD / Decile FloorWars CryptoPunks Covered Call </Text>
           <br></br>
+          <Text strong>Strike Price: {strike}</Text>
           <br></br>
           <Text strong>Expiration: {expiry}</Text>
           <br></br>
           <Text strong>Collateral: {collateralCurr}</Text>
           <br></br>
           <Text strong>Total Collateral Locked: {tvl} {collateralCurr}</Text>
+          <br></br>
+          <Text strong>Last ETHUSD Price: {ethPrice}</Text>
           <br></br>
           <Text strong>Last USDfl10PUNK Price: {price}</Text>
           <br></br>

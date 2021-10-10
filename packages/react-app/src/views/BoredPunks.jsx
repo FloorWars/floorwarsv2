@@ -10,6 +10,7 @@ const { Header, Content, Footer } = Layout;
 
 export default function BoredPunks({
   address,
+  price,
   usdcBalance,
   // longBalance,
   // shortBalance,
@@ -37,10 +38,9 @@ export default function BoredPunks({
      <Content style={{ padding: '0 50px' }}>
 
        <div className="site-layout-content">
-          <BoredPunksApp address = {address} tx = {tx} readContracts = {readContracts} writeContracts = {writeContracts} usdcBalance = {usdcBalance} />
+          <BoredPunksApp address={address} price={price} tx={tx} readContracts={readContracts} writeContracts={writeContracts} usdcBalance={usdcBalance} />
        </div>
      </Content>
-     <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
    </Layout>
 
 
