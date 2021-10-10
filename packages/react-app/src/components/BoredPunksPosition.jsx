@@ -9,7 +9,7 @@ export default function BoredPunksPosition(props) {
 
   let address = props.address;
   let positionTokens = [];
-  let colBalance = props.usdcBalance ? props.usdcBalance.toString() : 0;
+  let colBalance = props.usdcBalance ? utils.formatUnits(props.usdcBalance, 6) : 0;
 
   console.log("my address: ", address)
 
