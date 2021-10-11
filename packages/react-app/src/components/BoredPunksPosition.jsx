@@ -16,6 +16,12 @@ export default function BoredPunksPosition(props) {
   let shortBalance = props.shortBalance ? utils.formatUnits(props.shortBalance, 6) : 0;
   let pairsMinted = props.pairsMinted ? utils.formatUnits(props.pairsMinted, 6) : 0;
   let colAllowance = props.colAllowance ? utils.formatUnits(props.colAllowance, 6) : 0;
+  let maxMint = "MAX: "
+  if(colAllowance > colBalance) {
+    maxMint += colBalance
+  } else {
+    maxMint += colAllowance
+  }
 
   return (
     <div className="BoredPunksPosition">
@@ -33,7 +39,7 @@ export default function BoredPunksPosition(props) {
             <Text strong>Pairs Minted:</Text>
             <br></br>
             <Text>Available allowance: {colAllowance}</Text>
-            <Input placeholder="L/S amount" onChange={e => {
+            <Input placeholder={maxMint} onChange={e => {
               setCreateAmount(e.target.value)
 
               if(e.target.value > colAllowance) {
