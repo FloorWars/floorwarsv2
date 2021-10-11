@@ -17,7 +17,6 @@ export default function BoredPunksPosition(props) {
   let pairsMinted = props.pairsMinted ? utils.formatUnits(props.pairsMinted, 6) : 0;
   let colAllowance = props.colAllowance ? utils.formatUnits(props.colAllowance, 6) : 0;
 
-
   return (
     <div className="BoredPunksPosition">
         <Row justify="center">
@@ -52,7 +51,12 @@ export default function BoredPunksPosition(props) {
               onClick={async () => {
                 if(!showSpan) {
                   if(createAmount === 0 || createAmount === "" && colAllowance > 0) {
-                    const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(colAllowance, 6)))
+                    if(colAllowance > colBalance) {
+                      const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(colBalance, 6)))
+                    } else {
+                      const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(colAllowance, 6)))
+
+                    }
                   } else if(createAmount === 0 || createAmount === "" && colAllowance <= 0) {
                     window.alert("You need to approve collateral first, enter a value to approve and mint")
                   } else {
