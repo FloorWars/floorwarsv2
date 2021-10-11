@@ -15,7 +15,6 @@ export default function BoredPunksPosition(props) {
   let pairsMinted = props.pairsMinted ? utils.formatUnits(props.pairsMinted, 6) : 0;
   let colAllowance = props.colAllowance ? utils.formatUnits(props.colAllowance, 6) : 0;
 
-
   return (
     <div className="BoredPunksPosition">
         <Row justify="center">
@@ -32,7 +31,7 @@ export default function BoredPunksPosition(props) {
             <Text strong>Pairs Minted:</Text>
             <Button type="primary"
               onClick={async () => {
-                const result = props.tx(props.writeContracts.LSP.create(10000000))
+                const result = props.tx(props.writeContracts.LSP.create(utils.parseUnits(colAllowance, 6)))
               }}
                 block>Mint L/S Tokens</Button>
             <Button block>Settle L/S Tokens</Button>

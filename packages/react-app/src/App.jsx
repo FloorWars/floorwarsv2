@@ -167,12 +167,14 @@ const web3Modal = new Web3Modal({
 });
 
 function App(props) {
-  const mainnetProvider = mumbaiProvider;
+  const mainnetProvider = mumbaiProvider ? mumbaiProvider : null;
     // poktMainnetProvider && poktMainnetProvider._isProvider
     //   ? poktMainnetProvider
     //   : scaffoldEthProvider && scaffoldEthProvider._network
     //   ? scaffoldEthProvider
-    //   : mainnetInfura;
+    //   : mumbaiProvider
+    //   ? mumbaiProvider
+
 
   const [injectedProvider, setInjectedProvider] = useState();
   const [address, setAddress] = useState();
@@ -189,7 +191,6 @@ function App(props) {
 
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
   const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
-
   /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
   const gasPrice = useGasPrice(targetNetwork, "fast");
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
@@ -270,7 +271,7 @@ function App(props) {
     address,
   ])
 
-  const lspAddress = readContracts && readContracts.LSP && readContracts.LSP.address ? readContracts.LSP.address : "0";
+  const lspAddress = readContracts && readContracts.LSP && readContracts.LSP.address ? readContracts.LSP.address : "0x0";
 
   console.log("lspAddress", lspAddress)
 
