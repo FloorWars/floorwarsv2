@@ -8,6 +8,7 @@ const { Title, Paragraph, Text, Link } = Typography;
 export default function BoredPunksPosition(props) {
   const [createAmount, setCreateAmount] = useState(0);
   const [showSpan, setShowSpan] = useState(false);
+  const [allowance, setAllowance] = useState(0);
 
   let address = props.address;
   let colBalance = props.usdcBalance ? utils.formatUnits(props.usdcBalance, 6) : 0;
@@ -32,7 +33,7 @@ export default function BoredPunksPosition(props) {
             <br></br>
             <Text strong>Pairs Minted:</Text>
             <br></br>
-            { showSpan ?  <Text type="danger">Amount exceeds allowance</Text> : <br></br> }
+            <Text>Available allowance: {colAllowance}</Text>
             <Input placeholder="L/S amount" onChange={e => {
               setCreateAmount(e.target.value)
 
@@ -49,9 +50,25 @@ export default function BoredPunksPosition(props) {
             }} />
             <Button type="primary"
               onClick={async () => {
-                const result = props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
+                if(!showSpan) {
+                  if(createAmount === 0 || createAmount === "" && colAllowance > 0) {
+                    const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(colAllowance, 6)))
+                  } else if(createAmount === 0 || createAmount === "" && colAllowance <= 0) {
+                    window.alert("You need to approve collateral first, enter a value to approve and mint")
+                  } else {
+                    const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
+                  }
+                } else {
+                  let approvalAmount = createAmount - colAllowance
+                  approvalAmount = utils.parseUnits(approvalAmount.toString(), 6)
+                  const lspAddress = props.readContracts && props.readContracts.LSP && props.readContracts.LSP.address;
+                  const resultApproval = await props.tx(props.writeContracts.USDC.approve(lspAddress, approvalAmount))
+
+                  const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
+                }
+
               }}
-                block>Mint L/S Tokens</Button>
+                block>{showSpan ? "Approve, Create" : "Create"}</Button>
           </Col>
           <Col span ={12}>
             <br></br>
