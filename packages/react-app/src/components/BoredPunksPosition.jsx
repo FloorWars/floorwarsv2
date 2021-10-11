@@ -32,15 +32,20 @@ export default function BoredPunksPosition(props) {
             <br></br>
             <Text strong>Pairs Minted:</Text>
             <br></br>
-            { showSpan ?  <span>Amount exceeds allowance</span> : <br></br> }
+            { showSpan ?  <Text type="danger">Amount exceeds allowance</Text> : <br></br> }
             <Input placeholder="L/S amount" onChange={e => {
               setCreateAmount(e.target.value)
-
+              console.log(e.target.value)
               if(createAmount > colAllowance) {
                 setShowSpan(true)
               } else {
                 setShowSpan(false)
               }
+
+              if(createAmount === null) {
+                setShowSpan(false)
+              }
+
               console.log("showspan", showSpan)
             }} />
             <Button type="primary"
