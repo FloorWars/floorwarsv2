@@ -273,8 +273,6 @@ function App(props) {
 
   const lspAddress = readContracts && readContracts.LSP && readContracts.LSP.address ? readContracts.LSP.address : "0x0";
 
-  console.log("lspAddress", lspAddress)
-
   const colAllowance = useContractReader(mainnetContracts, "USDC", "allowance", [
     address,
     lspAddress,

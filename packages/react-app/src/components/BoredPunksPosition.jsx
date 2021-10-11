@@ -26,7 +26,7 @@ export default function BoredPunksPosition(props) {
     }
     setMaxMint(maxiMint)
 
-  }, [colBalance, colAllowance]);
+  }, []);
 
 
   return (
@@ -45,7 +45,7 @@ export default function BoredPunksPosition(props) {
             <Text strong>Pairs Minted:</Text>
             <br></br>
             <Text>Available allowance: {colAllowance}</Text>
-            <Input defaultValue={maxMint} onChange={e => {
+            <Input defaultValue={maxMint} type="number" onChange={e => {
               setCreateAmount(e.target.value)
 
               if(e.target.value > colAllowance) {
