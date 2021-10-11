@@ -8,7 +8,7 @@ const { Title, Paragraph, Text, Link } = Typography;
 export default function BoredPunksPosition(props) {
   const [createAmount, setCreateAmount] = useState(0);
   const [showSpan, setShowSpan] = useState(false);
-  const [allowance, setAllowance] = useState(0);
+  const [maxMint, setMaxMint] = useState();
 
   let address = props.address;
   let colBalance = props.usdcBalance ? utils.formatUnits(props.usdcBalance, 6) : 0;
@@ -16,12 +16,18 @@ export default function BoredPunksPosition(props) {
   let shortBalance = props.shortBalance ? utils.formatUnits(props.shortBalance, 6) : 0;
   let pairsMinted = props.pairsMinted ? utils.formatUnits(props.pairsMinted, 6) : 0;
   let colAllowance = props.colAllowance ? utils.formatUnits(props.colAllowance, 6) : 0;
-  let maxMint = "MAX: "
-  if(colAllowance > colBalance) {
-    maxMint += colBalance
-  } else {
-    maxMint += colAllowance
-  }
+
+  useEffect(() => {
+    let maxiMint
+    if(colAllowance > colBalance) {
+      maxiMint = colBalance
+    } else {
+      maxiMint = colAllowance
+    }
+    setMaxMint(maxiMint)
+
+  }, [colBalance, colAllowance]);
+
 
   return (
     <div className="BoredPunksPosition">
@@ -39,7 +45,7 @@ export default function BoredPunksPosition(props) {
             <Text strong>Pairs Minted:</Text>
             <br></br>
             <Text>Available allowance: {colAllowance}</Text>
-            <Input placeholder={maxMint} onChange={e => {
+            <Input defaultValue={maxMint} onChange={e => {
               setCreateAmount(e.target.value)
 
               if(e.target.value > colAllowance) {
