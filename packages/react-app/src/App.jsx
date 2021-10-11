@@ -270,10 +270,11 @@ function App(props) {
     address,
   ])
 
+  const lspAddress = readContracts.LSP.address
 
   const colAllowance = useContractReader(mainnetContracts, "USDC", "allowance", [
     address,
-    "0xfb75cceBe6aea69F041d401bb66F02d187cB0ECF"
+    lspAddress,
   ])
 
   // keep track of a variable from the contract in the local React state:
