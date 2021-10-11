@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 const { utils } = require("ethers");
-import { Typography, Row, Col, Button } from "antd";
+import { Typography, Row, Col, Button, Space } from "antd";
 import "./BoredPunks.css";
 
 const { Title, Paragraph, Text, Link } = Typography;
@@ -18,46 +18,44 @@ export default function BoredPunksPosition(props) {
 
   return (
     <div className="BoredPunksPosition">
-      <Row justify="center">
-        <Col span = {12}>
-          <Text strong>Your Wallet Balance</Text>
-          <br></br>
-          <br></br>
-          <Text strong>Collateral(USDC):</Text>
-          <br></br>
-          <Text strong>Long Tokens:</Text>
-          <br></br>
-          <Text strong>Short Tokens:</Text>
-          <br></br>
-          <Text strong>Pairs Minted:</Text>
-          <Button type="primary"
-            onClick={async () => {
-              const result = props.tx(props.writeContracts.LSP.create(10000000))
-            }}
-              block>Mint L/S Tokens</Button>
-          <Button block>Settle L/S Tokens</Button>
-        </Col>
-        <Col span ={12}>
-          <br></br>
-          <br></br>
-          <Text strong>{colBalance}</Text>
-          <br></br>
-          <Text strong>{longBalance}</Text>
-          <br></br>
-          <Text strong>{shortBalance}</Text>
-          <br></br>
-          <Text strong>{pairsMinted}</Text>
-          <Button type="primary"
-            onClick={async () => {
-              const result = props.tx(props.writeContracts.LSP.redeem(10000000))
-            }}
-          danger block>
-            Redeem
-          </Button>
-        </Col>
-
-
-      </Row>
+        <Row justify="center">
+          <Col span = {12}>
+            <Text strong>Your Wallet Balance</Text>
+            <br></br>
+            <br></br>
+            <Text strong>Collateral(USDC):</Text>
+            <br></br>
+            <Text strong>Long Tokens:</Text>
+            <br></br>
+            <Text strong>Short Tokens:</Text>
+            <br></br>
+            <Text strong>Pairs Minted:</Text>
+            <Button type="primary"
+              onClick={async () => {
+                const result = props.tx(props.writeContracts.LSP.create(10000000))
+              }}
+                block>Mint L/S Tokens</Button>
+            <Button block>Settle L/S Tokens</Button>
+          </Col>
+          <Col span ={12}>
+            <br></br>
+            <br></br>
+            <Text strong>{colBalance}</Text>
+            <br></br>
+            <Text strong>{longBalance}</Text>
+            <br></br>
+            <Text strong>{shortBalance}</Text>
+            <br></br>
+            <Text strong>{pairsMinted}</Text>
+            <Button type="primary"
+              onClick={async () => {
+                const result = props.tx(props.writeContracts.LSP.redeem(10000000))
+              }}
+            danger block>
+              Redeem
+            </Button>
+          </Col>
+        </Row>
     </div>
 
 

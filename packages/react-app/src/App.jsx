@@ -241,9 +241,9 @@ function App(props) {
   const mainnetContracts = useContractLoader(mainnetProvider, contractConfig);
 
   // If you want to call a function on a new block
-  useOnBlock(mainnetProvider, () => {
-    console.log(`⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`);
-  });
+  // useOnBlock(mainnetProvider, () => {
+  //   console.log(`⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`);
+  // });
 
   // Then read your DAI balance like:
   const myMainnetDAIBalance = useContractReader(mainnetContracts, "DAI", "balanceOf", [
@@ -270,7 +270,9 @@ function App(props) {
     address,
   ])
 
-  const lspAddress = readContracts.LSP.address
+  const lspAddress = readContracts && readContracts.LSP && readContracts.LSP.address ? readContracts.LSP.address : "0";
+
+  console.log("lspAddress", lspAddress)
 
   const colAllowance = useContractReader(mainnetContracts, "USDC", "allowance", [
     address,
