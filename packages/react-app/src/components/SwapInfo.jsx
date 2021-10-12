@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 const { utils } = require("ethers");
-import { Button, Card, Descriptions, Row, Col, Layout, Menu, Breadcrumb, Typography, Space } from "antd";
+import { Button, Card, Descriptions, Divider, Row, Col, Layout, Menu, Breadcrumb, Typography, Space } from "antd";
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph, Text, Link } = Typography;
@@ -26,6 +26,7 @@ export default function SwapInfo({
   return (
 
     <Row justify="center">
+      <Divider>Swap Long/Short Tokens</Divider>
       <Space>
          <Card >
            <Descriptions title="Long (token) / USDC" bordered>
