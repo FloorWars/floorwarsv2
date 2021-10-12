@@ -56,7 +56,7 @@ export default function BoredPunksPosition(props) {
                 <Descriptions.Item label="Collateral" span={3}>{colBalance}</Descriptions.Item>
                 <Descriptions.Item label="Approved" span={3}>{colAllowance}</Descriptions.Item>
               </Descriptions>
-              <Input value={createAmount} type="float" onChange={e => {
+              <Input addonBefore="Amount" value={createAmount} type="float" onChange={e => {
                 setCreateAmount(e.target.value)
 
                 if(parseFloat(e.target.value) > parseFloat(colAllowance)) {
@@ -101,14 +101,14 @@ export default function BoredPunksPosition(props) {
           <Col span = {12}>
             <Card >
               <Descriptions title="Close Long or Short Position" bordered>
-                <Descriptions.Item label="Long" span={3}>{longBalance}</Descriptions.Item>
-                <Descriptions.Item label="Short" span={3}>{shortBalance}</Descriptions.Item>
-                <Descriptions.Item label="Redeem Pairs" span={3}>{maxRedeem}</Descriptions.Item>
+                <Descriptions.Item label="Longs" span={3}>{longBalance}</Descriptions.Item>
+                <Descriptions.Item label="Shorts" span={3}>{shortBalance}</Descriptions.Item>
+                <Descriptions.Item label="L/S Pairs" span={3}>{maxRedeem}</Descriptions.Item>
                 <Descriptions.Item label="Expired" span={3}>No</Descriptions.Item>
               </Descriptions>
               {/*<Input type="number" placeholder='Long tokens to spend'/>
               <Input type="number" placeholder='Short tokens to spend'/>*/}
-              <Input type="float" value={redeemVal} onChange={e => {
+              <Input addonBefore="Pairs" type="float" value={redeemVal} onChange={e => {
                 setRedeemVal(e.target.value)
               }}></Input>
               <Button type="primary"
