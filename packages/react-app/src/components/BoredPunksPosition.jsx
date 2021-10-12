@@ -8,7 +8,7 @@ const { Title, Paragraph, Text, Link } = Typography;
 export default function BoredPunksPosition(props) {
   const [createAmount, setCreateAmount] = useState(0);
   const [showSpan, setShowSpan] = useState(false);
-  const [maxMint, setMaxMint] = useState(0);
+  const [showSpin, setShowSpin] = useState(false);
 
   let address = props.address;
   let colBalance = props.usdcBalance ? utils.formatUnits(props.usdcBalance, 6) : 0;
@@ -19,7 +19,7 @@ export default function BoredPunksPosition(props) {
 
   useEffect(() => {
     let maxiMint
-    if(colAllowance > colBalance) {
+    if(parseFloat(colAllowance) > parseFloat(colBalance)) {
       maxiMint = colBalance
       setShowSpan(true)
     } else {
@@ -27,6 +27,7 @@ export default function BoredPunksPosition(props) {
       setShowSpan(false)
     }
     setCreateAmount(maxiMint)
+    setShowSpin(false)
 
 
   }, [colBalance, colAllowance]);
@@ -53,7 +54,7 @@ export default function BoredPunksPosition(props) {
             <Input value={createAmount} onChange={e => {
               setCreateAmount(e.target.value)
 
-              if(e.target.value > colAllowance) {
+              if(parseFloat(e.target.value) > parseFloat(colAllowance)) {
                 setShowSpan(true)
               } else {
                 setShowSpan(false)
@@ -67,20 +68,27 @@ export default function BoredPunksPosition(props) {
             <Button type="primary"
               onClick={async () => {
                 if(!showSpan) {
-
-                  const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
+                  if(createAmount === '' || createAmount === "0.0" || createAmount === "0") {
+                    window.alert("Enter a value to get approval")
+                  } else {
+                    setShowSpin(true)
+                    const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
+                    .then(setShowSpin(false))
+                  }
 
                 } else {
 
-                  let approvalAmount = createAmount - colAllowance
+                  let approvalAmount = createAmount
                   approvalAmount = utils.parseUnits(approvalAmount.toString(), 6)
+                  setShowSpin(true)
                   const lspAddress = props.readContracts && props.readContracts.LSP && props.readContracts.LSP.address;
                   const resultApproval = await props.tx(props.writeContracts.USDC.approve(lspAddress, approvalAmount))
+                  .then(setShowSpin(false))
 
                 }
 
               }}
-                block>{showSpan ? "Approve" : "Create"}</Button>
+                block>{showSpan ? (showSpin ? <Spin /> : "Approve") : (showSpin ? <Spin /> : "Create")}</Button>
           </Col>
           <Col span ={12}>
             <br></br>
