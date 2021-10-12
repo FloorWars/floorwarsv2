@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 const { utils } = require("ethers");
-import { Typography, Row, Col, Button, Space, Input } from "antd";
+import { Typography, Row, Col, Button, Space, Input, Spin } from "antd";
 import "./BoredPunks.css";
 
 const { Title, Paragraph, Text, Link } = Typography;
@@ -8,6 +8,7 @@ const { Title, Paragraph, Text, Link } = Typography;
 export default function BoredPunksPosition(props) {
   const [createAmount, setCreateAmount] = useState(0);
   const [showSpan, setShowSpan] = useState(false);
+  const [maxMint, setMaxMint] = useState(0);
 
   let address = props.address;
   let colBalance = props.usdcBalance ? utils.formatUnits(props.usdcBalance, 6) : 0;
@@ -20,12 +21,17 @@ export default function BoredPunksPosition(props) {
     let maxiMint
     if(colAllowance > colBalance) {
       maxiMint = colBalance
+      setShowSpan(true)
     } else {
       maxiMint = colAllowance
+      setShowSpan(false)
     }
     setCreateAmount(maxiMint)
 
+
   }, [colBalance, colAllowance]);
+
+
 
 
   return (
@@ -61,29 +67,20 @@ export default function BoredPunksPosition(props) {
             <Button type="primary"
               onClick={async () => {
                 if(!showSpan) {
-                  if(createAmount === 0 || createAmount === "" && colAllowance > 0) {
-                    if(colAllowance > colBalance) {
-                      const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(colBalance, 6)))
-                    } else {
-                      const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(colAllowance, 6)))
 
-                    }
-                  } else if(createAmount === 0 || createAmount === "" && colAllowance <= 0) {
-                    window.alert("You need to approve collateral first, enter a value to approve and mint")
-                  } else {
-                    const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
-                  }
+                  const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
+
                 } else {
+
                   let approvalAmount = createAmount - colAllowance
                   approvalAmount = utils.parseUnits(approvalAmount.toString(), 6)
                   const lspAddress = props.readContracts && props.readContracts.LSP && props.readContracts.LSP.address;
                   const resultApproval = await props.tx(props.writeContracts.USDC.approve(lspAddress, approvalAmount))
 
-                  const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
                 }
 
               }}
-                block>{showSpan ? "Approve, Create" : "Create"}</Button>
+                block>{showSpan ? "Approve" : "Create"}</Button>
           </Col>
           <Col span ={12}>
             <br></br>
