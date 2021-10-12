@@ -8,7 +8,7 @@ const { Title, Paragraph, Text, Link } = Typography;
 export default function BoredPunksPosition(props) {
   const [createAmount, setCreateAmount] = useState();
   const [showSpan, setShowSpan] = useState();
-  const [showSpin, setShowSpin] = useState(false);
+  const [showSpin, setShowSpin] = useState();
 
   let address = props.address;
   let colBalance = props.usdcBalance ? utils.formatUnits(props.usdcBalance, 6) : 0;
@@ -71,8 +71,6 @@ export default function BoredPunksPosition(props) {
                   } else {
                     setShowSpin(true)
 
-                    console.log("showSpin", showSpin)
-
                     const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
                     .then((e) => setShowSpin(false))
                   }
@@ -83,7 +81,6 @@ export default function BoredPunksPosition(props) {
                   approvalAmount = utils.parseUnits(approvalAmount.toString(), 6)
                   setShowSpin(true)
 
-                  console.log("showSpin", showSpin)
                   const lspAddress = props.readContracts && props.readContracts.LSP && props.readContracts.LSP.address;
                   const resultApproval = await props.tx(props.writeContracts.USDC.approve(lspAddress, approvalAmount))
                   .then((e) => setShowSpin(false))

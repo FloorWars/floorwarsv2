@@ -2292,5 +2292,29 @@ module.exports = {
       },
     },
   },
+  137 : {
+    contracts: {
+      WMATIC: {
+        address: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+        abi: ERC20ABI,
+      },
+      LSP: {
+        address: "0x8e13333ad57901b41D37D6a7207dCd7Fb52B6B09",
+        abi: LSPABI,
+      },
+      SHORT: {
+        address: "0x51ACc5E8C3b7bb34c3Be8150ce29bfbC1FcdA17C",
+        abi: SyntheticTokenABI,
+      },
+      LONG: {
+        address: "0x95d83F738500B0Dd9C6C668EddA3d9E5ff481599",
+        abi: SyntheticTokenABI,
+      },
+      USDC: {
+        address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+        abi: ERC20ABI
+      }
+    },
+  },
 
 };

@@ -70,9 +70,9 @@ export const NETWORKS = {
     chainId: 137,
     price: 1,
     gasPrice: 1000000000,
-    rpcUrl: "https://rpc-mainnet.maticvigil.com",
+    rpcUrl: "https://speedy-nodes-nyc.moralis.io/d376b2384f04b47cf322a1c2/polygon/mainnet",
     faucet: "https://faucet.matic.network/",
-    blockExplorer: "https://explorer-mainnet.maticvigil.com//",
+    blockExplorer: "https://polygonscan.com/",
   },
   mumbai: {
     name: "mumbai",
