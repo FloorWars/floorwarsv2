@@ -35,8 +35,6 @@ export default function BoredPunksPosition(props) {
 
   useEffect(() => {
     let maxRedeem;
-    console.log("longBal", longBalance)
-    console.log("shortBal", shortBalance)
     if(longBalance > shortBalance) {
         maxRedeem = shortBalance
       } else {
@@ -70,7 +68,6 @@ export default function BoredPunksPosition(props) {
               } else {
                 setShowSpan(false)
               }
-
               if(e.target.value === '') {
                 setShowSpan(false)
               }
@@ -79,7 +76,7 @@ export default function BoredPunksPosition(props) {
             <Button type="primary"
               onClick={async () => {
                 if(!showSpan) {
-                  if(createAmount === '' || createAmount === "0.0" || createAmount === "0") {
+                  if(createAmount <= 0) {
                     window.alert("Enter a value to get approval or create")
                   } else {
                     setShowSpin(true)
@@ -119,14 +116,13 @@ export default function BoredPunksPosition(props) {
             }}></Input>
             <Button type="primary"
               onClick={async () => {
-                if(redeemVal > maxRedeem || redeemVal === '0' || redeemVal === '0' || redeemVal === '') {
+                if(redeemVal > maxRedeem || redeemVal <= 0) {
                   window.alert("Select a valid redeem amount")
                 } else {
                   setShowSpin(true)
                   const result = await props.tx(props.writeContracts.LSP.redeem(utils.parseUnits(redeemVal.toString(), 6)))
                   .then((e) => setShowSpin(false))
                 }
-
               }}
             danger>
               { showSpin ? <Spin /> : "Redeem" }
