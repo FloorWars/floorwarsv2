@@ -6,8 +6,8 @@ import "./BoredPunks.css";
 const { Title, Paragraph, Text, Link } = Typography;
 
 export default function BoredPunksPosition(props) {
-  const [createAmount, setCreateAmount] = useState(0);
-  const [showSpan, setShowSpan] = useState(false);
+  const [createAmount, setCreateAmount] = useState();
+  const [showSpan, setShowSpan] = useState();
   const [showSpin, setShowSpin] = useState(false);
 
   let address = props.address;
@@ -27,8 +27,6 @@ export default function BoredPunksPosition(props) {
       setShowSpan(false)
     }
     setCreateAmount(maxiMint)
-    setShowSpin(false)
-
 
   }, [colBalance, colAllowance]);
 
@@ -51,7 +49,7 @@ export default function BoredPunksPosition(props) {
             <Text strong>Pairs Minted:</Text>
             <br></br>
             <Text>Available allowance: {colAllowance}</Text>
-            <Input value={createAmount} onChange={e => {
+            <Input value={createAmount} type="number" onChange={e => {
               setCreateAmount(e.target.value)
 
               if(parseFloat(e.target.value) > parseFloat(colAllowance)) {
@@ -69,11 +67,14 @@ export default function BoredPunksPosition(props) {
               onClick={async () => {
                 if(!showSpan) {
                   if(createAmount === '' || createAmount === "0.0" || createAmount === "0") {
-                    window.alert("Enter a value to get approval")
+                    window.alert("Enter a value to get approval or create")
                   } else {
                     setShowSpin(true)
+
+                    console.log("showSpin", showSpin)
+
                     const result = await props.tx(props.writeContracts.LSP.create(utils.parseUnits(createAmount, 6)))
-                    .then(setShowSpin(false))
+                    .then((e) => setShowSpin(false))
                   }
 
                 } else {
@@ -81,9 +82,11 @@ export default function BoredPunksPosition(props) {
                   let approvalAmount = createAmount
                   approvalAmount = utils.parseUnits(approvalAmount.toString(), 6)
                   setShowSpin(true)
+
+                  console.log("showSpin", showSpin)
                   const lspAddress = props.readContracts && props.readContracts.LSP && props.readContracts.LSP.address;
                   const resultApproval = await props.tx(props.writeContracts.USDC.approve(lspAddress, approvalAmount))
-                  .then(setShowSpin(false))
+                  .then((e) => setShowSpin(false))
 
                 }
 
