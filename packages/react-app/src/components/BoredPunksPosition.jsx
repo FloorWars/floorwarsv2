@@ -9,11 +9,14 @@ export default function BoredPunksPosition(props) {
   const [createAmount, setCreateAmount] = useState();
   const [showSpan, setShowSpan] = useState();
   const [showSpin, setShowSpin] = useState();
+  const [maxRedeem, setMaxRedeem] = useState();
+  const [redeemAmount, setRedeemAmount] = useState();
+  const [redeemVal, setRedeemVal] = useState();
 
   let address = props.address;
   let colBalance = props.usdcBalance ? utils.formatUnits(props.usdcBalance, 6) : 0;
-  let longBalance = props.longBalance ? utils.formatUnits(props.longBalance, 6) : 0;
-  let shortBalance = props.shortBalance ? utils.formatUnits(props.shortBalance, 6) : 0;
+  let longBalance = props.longBalance ? parseFloat(utils.formatUnits(props.longBalance, 6)) : 0;
+  let shortBalance = props.shortBalance ? parseFloat(utils.formatUnits(props.shortBalance, 6)) : 0;
   let pairsMinted = props.pairsMinted ? utils.formatUnits(props.pairsMinted, 6) : 0;
   let colAllowance = props.colAllowance ? utils.formatUnits(props.colAllowance, 6) : 0;
 
@@ -30,7 +33,18 @@ export default function BoredPunksPosition(props) {
 
   }, [colBalance, colAllowance]);
 
-
+  useEffect(() => {
+    let maxRedeem;
+    console.log("longBal", longBalance)
+    console.log("shortBal", shortBalance)
+    if(longBalance > shortBalance) {
+        maxRedeem = shortBalance
+      } else {
+        maxRedeem = longBalance
+      }
+    setMaxRedeem(maxRedeem)
+    setRedeemVal(maxRedeem)
+  }, [shortBalance, longBalance])
 
 
   return (
@@ -46,10 +60,9 @@ export default function BoredPunksPosition(props) {
             <br></br>
             <Text strong>Short Tokens:</Text>
             <br></br>
-            <Text strong>Pairs Minted:</Text>
             <br></br>
             <Text>Available allowance: {colAllowance}</Text>
-            <Input value={createAmount} type="number" onChange={e => {
+            <Input value={createAmount} type="float" onChange={e => {
               setCreateAmount(e.target.value)
 
               if(parseFloat(e.target.value) > parseFloat(colAllowance)) {
@@ -99,18 +112,26 @@ export default function BoredPunksPosition(props) {
             <br></br>
             <Text strong>{shortBalance}</Text>
             <br></br>
-            <Text strong>{pairsMinted}</Text>
             <br></br>
-            <br></br>
-
+            <Text>Max redeem amount: {maxRedeem}</Text>
+            <Input type="float" value={redeemVal} onChange={e => {
+              setRedeemVal(e.target.value)
+            }}></Input>
             <Button type="primary"
               onClick={async () => {
-                const result = props.tx(props.writeContracts.LSP.redeem(10000000))
+                if(redeemVal > maxRedeem || redeemVal === '0' || redeemVal === '0' || redeemVal === '') {
+                  window.alert("Select a valid redeem amount")
+                } else {
+                  setShowSpin(true)
+                  const result = await props.tx(props.writeContracts.LSP.redeem(utils.parseUnits(redeemVal.toString(), 6)))
+                  .then((e) => setShowSpin(false))
+                }
+
               }}
-            danger block>
-              Redeem
+            danger>
+              { showSpin ? <Spin /> : "Redeem" }
             </Button>
-              <Button type="primary" block>Settle L/S Tokens</Button>
+              <Button type="primary">  { showSpin ? <Spin /> : "Settle" }</Button>
           </Col>
         </Row>
     </div>

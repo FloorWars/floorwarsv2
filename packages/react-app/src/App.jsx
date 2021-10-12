@@ -56,7 +56,7 @@ const { ethers } = require("ethers");
 const targetNetwork = NETWORKS.matic; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
-const DEBUG = true;
+const DEBUG = false;
 const NETWORKCHECK = true;
 
 // 🛰 providers
@@ -259,8 +259,10 @@ function App(props) {
     address,
   ]);
   let pairsMinted = 0;
+
   if (lspTokenBalance) {
     pairsMinted = lspTokenBalance[0]
+    
   }
 
   const longBalance = useContractReader(mainnetContracts, "LONG", "balanceOf", [
