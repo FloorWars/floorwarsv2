@@ -63,21 +63,21 @@ const NETWORKCHECK = true;
 if (DEBUG) console.log("📡 Connecting to Matic Mainnet");
 // const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
 // const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
-//
+const mumbaiProvider = navigator.onLine
+  ? new ethers.providers.StaticJsonRpcProvider(targetNetwork.rpcUrl)
+  : null;
 // attempt to connect to our own scaffold eth rpc and if that fails fall back to infura...
 // Using StaticJsonRpcProvider as the chainId won't change see https://github.com/ethers-io/ethers.js/issues/901
-// const scaffoldEthProvider = navigator.onLine
-//   ? new ethers.providers.StaticJsonRpcProvider("https://rpc.scaffoldeth.io:48544")
-//   : null;
-// const poktMainnetProvider = navigator.onLine
-//   ? new ethers.providers.StaticJsonRpcProvider(
-//       "https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
-//     )
-//   : null;
-// const mainnetInfura = navigator.onLine
-//   ? new ethers.providers.StaticJsonRpcProvider("https://mainnet.infura.io/v3/" + INFURA_ID)
-//   : null;
-const mumbaiProvider = new ethers.providers.StaticJsonRpcProvider(targetNetwork.rpcUrl)
+const maticVigilProvider = navigator.onLine
+  ? new ethers.providers.StaticJsonRpcProvider("https://rpc-mainnet.maticvigil.com")
+  : null;
+const bwareLabsProvider = navigator.onLine
+  ? new ethers.providers.StaticJsonRpcProvider("https://matic-mainnet-full-rpc.bwarelabs.com")
+  : null;
+const maticMainnetProvider = navigator.onLine
+  ? new ethers.providers.StaticJsonRpcProvider("https://rpc-mainnet.matic.network")
+  : null;
+
 // ( ⚠️ Getting "failed to meet quorum" errors? Check your INFURA_ID
 // 🏠 Your local provider is usually pointed at your local blockchain
 const localProviderUrl = targetNetwork.rpcUrl;
@@ -167,13 +167,14 @@ const web3Modal = new Web3Modal({
 });
 
 function App(props) {
-  const mainnetProvider = mumbaiProvider ? mumbaiProvider : null;
-    // poktMainnetProvider && poktMainnetProvider._isProvider
-    //   ? poktMainnetProvider
-    //   : scaffoldEthProvider && scaffoldEthProvider._network
-    //   ? scaffoldEthProvider
-    //   : mumbaiProvider
-    //   ? mumbaiProvider
+  const mainnetProvider =
+    mumbaiProvider && mumbaiProvider._isProvider
+      ? mumbaiProvider
+      : maticVigilProvider && maticVigilProvider._isProvider
+      ? maticVigilProvider
+      : bwareLabsProvider && bwareLabsProvider._isProvider
+      ? bwareLabsProvider
+      : maticMainnetProvider;
 
 
   const [injectedProvider, setInjectedProvider] = useState();
@@ -262,7 +263,7 @@ function App(props) {
 
   if (lspTokenBalance) {
     pairsMinted = lspTokenBalance[0]
-    
+
   }
 
   const longBalance = useContractReader(mainnetContracts, "LONG", "balanceOf", [
