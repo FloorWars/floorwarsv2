@@ -632,6 +632,18 @@ function App(props) {
               chainId={targetNetwork.chainId}
             />
           </Route>
+          <Route path="/matic-balancer-vault">
+            <Contract
+              name="BalancerVault"
+              customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.BalancerVault}
+              signer={userSigner}
+              provider={mainnetProvider}
+              address={address}
+              blockExplorer={targetNetwork.blockExplorer}
+              contractConfig={contractConfig}
+              chainId={targetNetwork.chainId}
+            />
+          </Route>
           <Route path="/mainnetlsp">
             <Contract
               name="LSP"
