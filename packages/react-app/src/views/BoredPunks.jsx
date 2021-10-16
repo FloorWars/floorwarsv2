@@ -19,6 +19,11 @@ export default function BoredPunks({
   shortBalance,
   pairsMinted,
   colAllowance,
+  longAllowance,
+  shortAllowance,
+  swapColAllowance,
+  longPool,
+  shortPool,
   tx,
   mainnetProvider,
   readContracts,
@@ -82,7 +87,8 @@ export default function BoredPunks({
           <BoredPunksApp address={address} price={price} tx={tx} readContracts={readContracts} writeContracts={writeContracts}
            usdcBalance={usdcBalance} longBalance = {longBalance} shortBalance = {shortBalance} pairsMinted = {pairsMinted}
            colAllowance={colAllowance}/>
-         <SwapInfo tx={tx} readContracts={readContracts} writeContracts={writeContracts} />
+         <SwapInfo tx={tx} readContracts={readContracts} writeContracts={writeContracts} longPool={longPool} shortPool={shortPool}
+           address={address} longAllowance={longAllowance} shortAllowance={shortAllowance} swapColAllowance={swapColAllowance}/>
        </div>
      </Content>
    </Layout>

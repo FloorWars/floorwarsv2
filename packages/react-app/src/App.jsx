@@ -8,7 +8,7 @@ import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import Web3Modal from "web3modal";
 import "./App.css";
 import { Account, Contract, Faucet, GasGauge, Header, Ramp, ThemeSwitch } from "./components";
-import { INFURA_ID, NETWORK, NETWORKS } from "./constants";
+import { INFURA_ID, NETWORK, NETWORKS, POOL_IDS } from "./constants";
 import { Transactor } from "./helpers";
 import {
   useBalance,
@@ -56,7 +56,7 @@ const { ethers } = require("ethers");
 const targetNetwork = NETWORKS.matic; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
-const DEBUG = false;
+const DEBUG = true;
 const NETWORKCHECK = true;
 
 // 🛰 providers
@@ -281,6 +281,21 @@ function App(props) {
     lspAddress,
   ])
 
+  const vaultAddress = readContracts && readContracts.BalancerVault && readContracts.BalancerVault.address ? readContracts.BalancerVault.address : "0x0";
+
+  const swapColAllowance = useContractReader(mainnetContracts, "USDC", "allowance", [
+    address,
+    vaultAddress
+  ])
+  const longAllowance = useContractReader(mainnetContracts, "LONG", "allowance", [
+    address,
+    vaultAddress
+  ])
+
+  const shortAllowance = useContractReader(mainnetContracts, "SHORT", "allowance", [
+    address,
+    vaultAddress
+  ])
   // keep track of a variable from the contract in the local React state:
   const purpose = useContractReader(readContracts, "YourContract", "purpose");
 
@@ -689,6 +704,11 @@ function App(props) {
               shortBalance={shortBalance}
               pairsMinted={pairsMinted}
               colAllowance={colAllowance}
+              shortAllowance={shortAllowance}
+              longAllowance={longAllowance}
+              swapColAllowance={swapColAllowance}
+              longPool={POOL_IDS.balancer.long}
+              shortPool={POOL_IDS.balancer.short}
               tx={tx}
               mainnetProvider={mainnetProvider}
               readContracts={readContracts}
