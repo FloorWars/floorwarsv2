@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 const { utils } = require("ethers");
 import { Button, Card, Descriptions, Divider, Row, Col, Layout, Menu, Breadcrumb, Typography, Space, Input, Select } from "antd";
+import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Paragraph, Text, Link } = Typography;
 
 const GIVEN_IN = 0
 const GIVEN_OUT = 1
+const LONG_TOKEN = 'Long Token';
+const SHORT_TOKEN = 'Short Token';
 
 export default function SwapInfo({
   tx,
@@ -23,9 +26,10 @@ export default function SwapInfo({
 
   const [spotLong, setSpotLong] = useState(0);
   const [spotShort, setSpotShort] = useState(0);
-  const [longSwapChoice, setLongSwapChoice] = useState('USDC');
-  const [longSwapChoiceTwo, setLongSwapChoiceTwo] = useState('LONG')
-  const [shortSwapChoice, setShortSwapChoice] = useState('USDC');
+  const [longSwapTokenIn, setLongSwapTokenIn] = useState('USDC');
+  const [longSwapTokenOut, setLongSwapTokenOut] = useState(LONG_TOKEN)
+  const [shortSwapChoice, setShortSwapTokenIn] = useState('USDC');
+  const [shortSwapTokenOut, setShortSwapTokenOut] = useState(SHORT_TOKEN)
   const [swapAmount, setSwapAmount] = useState(0);
   const [swapLongAllowed, setSwapLongAllowed] = useState(false);
   const [swapShortAllowed, setSwapShortAllowed] = useState(false);
@@ -68,20 +72,20 @@ export default function SwapInfo({
   }, [fColAllowance])
 
   useEffect(async () => {
-    if(longSwapChoice === 'USDC') {
-      setLongSwapChoiceTwo('LONG')
+    if(longSwapTokenIn === 'USDC') {
+      setLongSwapTokenOut(LONG_TOKEN)
     } else {
-      setLongSwapChoiceTwo('USDC')
+      setLongSwapTokenOut('USDC')
     }
-  }, [longSwapChoice])
+  }, [longSwapTokenIn])
 
   useEffect(async () => {
-    if(longSwapChoiceTwo === 'USDC') {
-      setLongSwapChoice('LONG')
+    if(longSwapTokenOut === 'USDC') {
+      setLongSwapTokenIn(LONG_TOKEN)
     } else {
-      setLongSwapChoice('USDC')
+      setLongSwapTokenIn('USDC')
     }
-  }, [longSwapChoiceTwo])
+  }, [longSwapTokenOut])
 
   function SingleSwap(
     poolId,
@@ -119,27 +123,22 @@ export default function SwapInfo({
       <Space>
         <Col span={12}>
          <Card className="SwapCard">
-           <Descriptions title="Long (token) / USDC" bordered>
+           <Descriptions title={LONG_TOKEN + " / USDC"} bordered>
              <Descriptions.Item label="Spot Rate">{spotLong}</Descriptions.Item>
            </Descriptions>
            <Input.Group>
-             <Input style={{ width: '72%' }} value = {swapAmount} onChange={e => {
-               setSwapAmount(e.target.value)
-             }}/>
-             <Input style={{ width: '72%' }} />
-            <Select labelInValue value={{value: longSwapChoice}} onChange={e => {
-              setLongSwapChoice(e.value)
-
-            }}>
-              <Option value="USDC">USDC</Option>
-              <Option value="LONG">LONG</Option>
-            </Select>
-            <Select labelInValue value={{value: longSwapChoiceTwo}} onChange={e => {
-              setLongSwapChoiceTwo(e.value)
-            }}>
-              <Option value="USDC">USDC</Option>
-              <Option value="LONG">LONG</Option>
-            </Select>
+             <div style={{margin:20}}>
+               <Input style={{ width: '72%' }} value = {swapAmount} onChange={e => {
+                 setSwapAmount(e.target.value)
+               }}/>
+               <span>{longSwapTokenIn}</span>
+             </div>
+             <div>
+               <Button onClick={() => { setLongSwapTokenIn(longSwapTokenOut); setLongSwapTokenOut(longSwapTokenIn); } } >Switch {(<ArrowUpOutlined />)}{(<ArrowDownOutlined />)}</Button>
+             </div><div style={{margin:20}}>
+               <Input style={{ width: '72%' }} />
+               <span>{longSwapTokenOut}</span>
+             </div>
 
           </Input.Group>
            <Button type="primary" onClick={async () => {
