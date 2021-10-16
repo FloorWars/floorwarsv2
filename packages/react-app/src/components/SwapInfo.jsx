@@ -21,7 +21,10 @@ export default function SwapInfo({
   address,
   longAllowance,
   shortAllowance,
-  swapColAllowance
+  swapColAllowance,
+  longBalance,
+  shortBalance,
+  usdcBalance
 }) {
 
   const [spotLong, setSpotLong] = useState(0);
@@ -34,10 +37,14 @@ export default function SwapInfo({
   const [swapLongAllowed, setSwapLongAllowed] = useState(false);
   const [swapShortAllowed, setSwapShortAllowed] = useState(false);
   const [swapColAllowed, setSwapColAllowed] = useState(false);
+  const [showSpin, setShowSpin] = useState(false);
 
   let fColAllowance = swapColAllowance ? parseFloat(utils.formatUnits(swapColAllowance, 6)) : null;
   let fLongAllowance = longAllowance ? parseFloat(utils.formatUnits(longAllowance, 6)) : null;
   let fShortAllowance = shortAllowance ? parseFloat(utils.formatUnits(shortAllowance, 6)) : null;
+  let fLongBalance = longBalance ? parseFloat(utils.formatUnits(longBalance, 6)) : null;
+  let fShortBalance = shortBalance ? parseFloat(utils.formatUnits(shortBalance, 6)) : null;
+  let fUsdcBalance = usdcBalance ? parseFloat(utils.formatUnits(usdcBalance, 6)) : null;
 
   useEffect(async () => {
     const result = await fetch( '/demoprice.json');
@@ -87,6 +94,7 @@ export default function SwapInfo({
     }
   }, [longSwapTokenOut])
 
+
   function SingleSwap(
     poolId,
     kind,
@@ -128,7 +136,7 @@ export default function SwapInfo({
            </Descriptions>
            <Input.Group>
              <div style={{margin:20}}>
-               <Input style={{ width: '72%' }} value = {swapAmount} onChange={e => {
+               <Input style={{ width: '75%' }} value = {swapAmount} onChange={e => {
                  setSwapAmount(e.target.value)
                }}/>
                <span>{longSwapTokenIn}</span>
@@ -136,20 +144,64 @@ export default function SwapInfo({
              <div>
                <Button onClick={() => { setLongSwapTokenIn(longSwapTokenOut); setLongSwapTokenOut(longSwapTokenIn); } } >Switch {(<ArrowUpOutlined />)}{(<ArrowDownOutlined />)}</Button>
              </div><div style={{margin:20}}>
-               <Input style={{ width: '72%' }} />
+               <Input style={{ width: '75%' }} />
                <span>{longSwapTokenOut}</span>
              </div>
 
           </Input.Group>
            <Button type="primary" onClick={async () => {
-              // let result
-              // if(!swapLongAllowed) {
-              //   result = await tx(writeContracts.LONG.approve())
-              // }
-              // const limit = (Date.now()) / 1000 + 3600;
-              // const swap = new SingleSwap(longPool, GIVEN_IN, )
-              //
-              // ))
+              let result
+              let colResult
+              let tokenInAddress
+              let tokenOutAddress
+              let swapBalance
+              let longAddress = readContracts && readContracts.LONG && readContracts.LONG.address ? readContracts.LONG.address : "0x0"
+              let vaultAddress = readContracts && readContracts.BalancerVault && readContracts.BalancerVault.address ? readContracts.BalancerVault.address : "0x0";
+              let colAddress = readContracts && readContracts.USDC && readContracts.USDC.address ? readContracts.USDC.address : "0x0";
+              let formattedSwapAmount = utils.formatEther(swapAmount, 6)
+              if(longSwapTokenIn === 'USDC') {
+                tokenInAddress = colAddress
+                tokenOutAddress = longAddress
+                swapBalance = fUsdcBalance
+              } else {
+                tokenInAddress = longAddress
+                tokenOutAddress = colAddress
+                swapBalance = fLongBalance
+              }
+
+              if(swapBalance < swapAmount) {
+                window.alert("Swap amount exceeds balance, please enter a valid amount")
+              } else {
+                setShowSpin(true);
+                if(!swapLongAllowed && !swapColAllowed) {
+                   result = await tx(writeContracts.LONG.approve(-1, vaultAddress))
+                   colResult = await tx(writeContracts.USDC.approve(-1, vaultAddress))
+                   .then((e) => setShowSpin(false))
+                } else if(!swapColAllowed) {
+                  result = await tx(writeContracts.USDC.approve(-1, vaultAddress))
+                  .then((e) => setShowSpin(false))
+                } else if(!swapLongAllowed) {
+                  result = await tx(writeContracts.LONG.approve(-1, vaultAddress))
+                  .then((e) => setShowSpin(false))
+                }
+
+                if(longSwapTokenIn === 'USDC') {
+                  tokenInAddress = colAddress
+                  tokenOutAddress = longAddress
+                } else {
+                  tokenInAddress = longAddress
+                  tokenOutAddress = colAddress
+                }
+
+                const limit = (Date.now()) / 1000 + 3600;
+                const swap = new SingleSwap(longPool, GIVEN_IN, tokenInAddress, tokenOutAddress, utils.formatEther(swapAmount,6))
+                const fundManagement = new FundManagement(address, false, address, false)
+              }
+
+
+
+
+
            }}
            block>Swap</Button>
            <Button type="secondary" block>Add long-USDC Liquidity</Button>
