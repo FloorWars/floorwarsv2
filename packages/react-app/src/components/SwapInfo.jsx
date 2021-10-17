@@ -24,7 +24,9 @@ export default function SwapInfo({
   swapColAllowance,
   longBalance,
   shortBalance,
-  usdcBalance
+  usdcBalance,
+  poolTokensLong,
+  poolTokensShort,
 }) {
 
   const [spotLong, setSpotLong] = useState(0);
@@ -33,11 +35,12 @@ export default function SwapInfo({
   const [longSwapTokenOut, setLongSwapTokenOut] = useState(LONG_TOKEN)
   const [shortSwapChoice, setShortSwapTokenIn] = useState('USDC');
   const [shortSwapTokenOut, setShortSwapTokenOut] = useState(SHORT_TOKEN)
-  const [swapAmount, setSwapAmount] = useState(0);
   const [swapLongAllowed, setSwapLongAllowed] = useState(false);
   const [swapShortAllowed, setSwapShortAllowed] = useState(false);
   const [swapColAllowed, setSwapColAllowed] = useState(false);
   const [showSpin, setShowSpin] = useState(false);
+  const [outAmount, setOutAmount] = useState();
+  const [inAmount, setInAmount] = useState();
 
   let fColAllowance = swapColAllowance ? parseFloat(utils.formatUnits(swapColAllowance, 6)) : null;
   let fLongAllowance = longAllowance ? parseFloat(utils.formatUnits(longAllowance, 6)) : null;
@@ -45,6 +48,9 @@ export default function SwapInfo({
   let fLongBalance = longBalance ? parseFloat(utils.formatUnits(longBalance, 6)) : null;
   let fShortBalance = shortBalance ? parseFloat(utils.formatUnits(shortBalance, 6)) : null;
   let fUsdcBalance = usdcBalance ? parseFloat(utils.formatUnits(usdcBalance, 6)) : null;
+  let longPoolUSDC = poolTokensLong ? parseFloat(utils.formatUnits(poolTokensLong[1][0], 6)) : null;
+  let longPoolLong = poolTokensLong ? parseFloat(utils.formatUnits(poolTokensLong[1][1], 6)) : null;
+
 
   useEffect(async () => {
     const result = await fetch( '/demoprice.json');
@@ -94,6 +100,31 @@ export default function SwapInfo({
     }
   }, [longSwapTokenOut])
 
+  useEffect(async () => {
+    console.log("longPoolUsdc", longPoolUSDC)
+    console.log("longPoolLong", longPoolLong)
+    let poolTotalBalance = longPoolUSDC * longPoolLong
+    console.log("poolTotalbalance", poolTotalBalance)
+    if(longSwapTokenIn === 'USDC') {
+      console.log("inAmount", inAmount)
+      let poolLongBalance = longPoolLong
+      let poolUsdcBalance = longPoolUSDC + parseFloat(inAmount)
+      console.log("poolUsdcBalance", poolUsdcBalance)
+      let outAmountLong = poolTotalBalance / poolUsdcBalance
+      outAmountLong = outAmountLong - poolLongBalance
+      outAmountLong *= (-1)
+      setOutAmount(outAmountLong)
+    } else {
+      let poolUsdcBalance = longPoolUSDC
+      let poolLongBalance = longPoolLong + parseFloat(inAmount)
+      console.log("poolLongBalance", poolLongBalance)
+      let outAmountUsdc = poolTotalBalance / poolLongBalance
+      console.log("poolTotalBalance after divison", poolTotalBalance)
+      outAmountUsdc = outAmountUsdc - poolUsdcBalance
+      outAmountUsdc *= (-1)
+      setOutAmount(outAmountUsdc)
+    }
+  }, [inAmount])
 
   function SingleSwap(
     poolId,
@@ -136,15 +167,15 @@ export default function SwapInfo({
            </Descriptions>
            <Input.Group>
              <div style={{margin:20}}>
-               <Input style={{ width: '75%' }} value = {swapAmount} onChange={e => {
-                 setSwapAmount(e.target.value)
+               <Input style={{ width: '75%' }} value = {inAmount} type="float" onChange={e => {
+                 setInAmount(e.target.value)
                }}/>
                <span>{longSwapTokenIn}</span>
              </div>
              <div>
                <Button onClick={() => { setLongSwapTokenIn(longSwapTokenOut); setLongSwapTokenOut(longSwapTokenIn); } } >Switch {(<ArrowUpOutlined />)}{(<ArrowDownOutlined />)}</Button>
              </div><div style={{margin:20}}>
-               <Input style={{ width: '75%' }} />
+               <Input style={{ width: '75%' }} value= {outAmount} />
                <span>{longSwapTokenOut}</span>
              </div>
 
@@ -158,7 +189,7 @@ export default function SwapInfo({
               let longAddress = readContracts && readContracts.LONG && readContracts.LONG.address ? readContracts.LONG.address : "0x0"
               let vaultAddress = readContracts && readContracts.BalancerVault && readContracts.BalancerVault.address ? readContracts.BalancerVault.address : "0x0";
               let colAddress = readContracts && readContracts.USDC && readContracts.USDC.address ? readContracts.USDC.address : "0x0";
-              let formattedSwapAmount = utils.formatEther(swapAmount, 6)
+              let formattedInAmount = utils.formatEther(inAmount, 6)
               if(longSwapTokenIn === 'USDC') {
                 tokenInAddress = colAddress
                 tokenOutAddress = longAddress
@@ -169,7 +200,7 @@ export default function SwapInfo({
                 swapBalance = fLongBalance
               }
 
-              if(swapBalance < swapAmount) {
+              if(swapBalance < inAmount) {
                 window.alert("Swap amount exceeds balance, please enter a valid amount")
               } else {
                 setShowSpin(true);

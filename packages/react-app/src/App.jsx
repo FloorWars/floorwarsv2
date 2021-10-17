@@ -266,6 +266,14 @@ function App(props) {
 
   }
 
+  const poolTokensLong = useContractReader(mainnetContracts, "BalancerVault", "getPoolTokens", [
+    POOL_IDS.balancer.long,
+  ])
+
+  const poolTokensShort = useContractReader(mainnetContracts, "BalancerVault", "getPoolTokens", [
+    POOL_IDS.balancer.short,
+  ])
+
   const longBalance = useContractReader(mainnetContracts, "LONG", "balanceOf", [
     address,
   ])
@@ -709,6 +717,8 @@ function App(props) {
               swapColAllowance={swapColAllowance}
               longPool={POOL_IDS.balancer.long}
               shortPool={POOL_IDS.balancer.short}
+              poolTokensLong={poolTokensLong}
+              poolTokensShort={poolTokensShort}
               tx={tx}
               mainnetProvider={mainnetProvider}
               readContracts={readContracts}
