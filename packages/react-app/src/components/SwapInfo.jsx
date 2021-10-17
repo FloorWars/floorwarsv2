@@ -41,6 +41,7 @@ export default function SwapInfo({
   const [showSpin, setShowSpin] = useState(false);
   const [outAmount, setOutAmount] = useState(0);
   const [inAmount, setInAmount] = useState(0);
+  const [swapRateUsdc, setSwapRateUsdc] = useState(0);
 
   let fColAllowance = swapColAllowance ? parseFloat(utils.formatUnits(swapColAllowance, 6)) : null;
   let fLongAllowance = longAllowance ? parseFloat(utils.formatUnits(longAllowance, 6)) : null;
@@ -101,28 +102,26 @@ export default function SwapInfo({
   }, [longSwapTokenOut])
 
   useEffect(async () => {
-    console.log("longPoolUsdc", longPoolUSDC)
-    console.log("longPoolLong", longPoolLong)
+
     let poolTotalBalance = longPoolUSDC * longPoolLong
-    console.log("poolTotalbalance", poolTotalBalance)
     if(longSwapTokenIn === 'USDC') {
-      console.log("inAmount", inAmount)
       let poolLongBalance = longPoolLong
       let poolUsdcBalance = longPoolUSDC + parseFloat(inAmount)
-      console.log("poolUsdcBalance", poolUsdcBalance)
       let outAmountLong = poolTotalBalance / poolUsdcBalance
       outAmountLong = outAmountLong - poolLongBalance
       outAmountLong *= (-1)
       setOutAmount(outAmountLong)
+      let usdcRate = parseFloat(inAmount) / outAmountLong
+      setSwapRateUsdc(usdcRate)
     } else {
       let poolUsdcBalance = longPoolUSDC
       let poolLongBalance = longPoolLong + parseFloat(inAmount)
-      console.log("poolLongBalance", poolLongBalance)
       let outAmountUsdc = poolTotalBalance / poolLongBalance
-      console.log("poolTotalBalance after divison", poolTotalBalance)
       outAmountUsdc = outAmountUsdc - poolUsdcBalance
       outAmountUsdc *= (-1)
       setOutAmount(outAmountUsdc)
+      let usdcRate = outAmountUsdc / parseFloat(inAmount)
+      setSwapRateUsdc(usdcRate)
     }
   }, [inAmount, longSwapTokenIn])
 
@@ -174,7 +173,9 @@ export default function SwapInfo({
              </div>
              <div>
                <Button onClick={() => { setLongSwapTokenIn(longSwapTokenOut); setLongSwapTokenOut(longSwapTokenIn); } } >Switch {(<ArrowUpOutlined />)}{(<ArrowDownOutlined />)}</Button>
+               <span>USDC per token:{swapRateUsdc}</span>
              </div><div style={{margin:20}}>
+
                <Input style={{ width: '75%' }} value= {outAmount} />
                <span>{longSwapTokenOut}</span>
              </div>
