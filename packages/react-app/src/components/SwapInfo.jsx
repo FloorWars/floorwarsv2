@@ -39,8 +39,8 @@ export default function SwapInfo({
   const [swapShortAllowed, setSwapShortAllowed] = useState(false);
   const [swapColAllowed, setSwapColAllowed] = useState(false);
   const [showSpin, setShowSpin] = useState(false);
-  const [outAmount, setOutAmount] = useState();
-  const [inAmount, setInAmount] = useState();
+  const [outAmount, setOutAmount] = useState(0);
+  const [inAmount, setInAmount] = useState(0);
 
   let fColAllowance = swapColAllowance ? parseFloat(utils.formatUnits(swapColAllowance, 6)) : null;
   let fLongAllowance = longAllowance ? parseFloat(utils.formatUnits(longAllowance, 6)) : null;
@@ -124,7 +124,7 @@ export default function SwapInfo({
       outAmountUsdc *= (-1)
       setOutAmount(outAmountUsdc)
     }
-  }, [inAmount])
+  }, [inAmount, longSwapTokenIn])
 
   function SingleSwap(
     poolId,
