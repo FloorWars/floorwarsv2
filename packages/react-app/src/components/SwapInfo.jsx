@@ -42,6 +42,8 @@ export default function SwapInfo({
   const [outAmount, setOutAmount] = useState(0);
   const [inAmount, setInAmount] = useState(0);
   const [swapRateUsdc, setSwapRateUsdc] = useState(0);
+  const [disableIn, setDisableIn] = useState(false);
+  const [disableOut, setDisableOut] = useState(false);
 
   let fColAllowance = swapColAllowance ? parseFloat(utils.formatUnits(swapColAllowance, 6)).toFixed(6) : null;
   let fLongAllowance = longAllowance ? parseFloat(utils.formatUnits(longAllowance, 6)).toFixed(6) : null;
@@ -102,50 +104,76 @@ export default function SwapInfo({
   }, [longSwapTokenOut])
 
   useEffect(async () => {
-    let currentInAmount = parseFloat(inAmount).toFixed(6)
-    currentInAmount = parseFloat(currentInAmount)
-    console.log("currentINAmount", currentInAmount)
-    if(currentInAmount === null || currentInAmount == 0 || currentInAmount === undefined || isNaN(currentInAmount) ) {
-      setOutAmount(0)
-      setSwapRateUsdc(0)
-    } else {
-      let poolTotalBalance = longPoolUSDC * longPoolLong
-      poolTotalBalance = parseFloat(poolTotalBalance).toFixed(6)
-
-      if(longSwapTokenIn === 'USDC') {
-        let poolLongBalance = longPoolLong
-
-        let poolUsdcBalance = parseFloat(longPoolUSDC).toFixed(6)
-        let usdcBalanceAfterIn = parseFloat(poolUsdcBalance) + parseFloat(inAmount)
-        usdcBalanceAfterIn = parseFloat(usdcBalanceAfterIn).toFixed(6)
-
-        let outAmountLong = poolTotalBalance / usdcBalanceAfterIn
-
-        outAmountLong = outAmountLong - poolLongBalance
-        outAmountLong *= (-1)
-        outAmountLong = parseFloat(outAmountLong).toFixed(6)
-        setOutAmount(outAmountLong)
-        let usdcRate = parseFloat(inAmount) / outAmountLong
-        usdcRate = parseFloat(usdcRate).toFixed(6)
-        setSwapRateUsdc(usdcRate)
+    if(!disableIn) {
+      let currentInAmount = parseFloat(inAmount).toFixed(6)
+      currentInAmount = parseFloat(currentInAmount)
+      console.log("currentINAmount", currentInAmount)
+      if(currentInAmount === null || currentInAmount == 0 || currentInAmount === undefined || isNaN(currentInAmount) ) {
+        setOutAmount(0)
+        setSwapRateUsdc(0)
       } else {
-        let poolUsdcBalance = longPoolUSDC
-        let poolLongBalance = parseFloat(longPoolLong).toFixed(6)
-        let longBalanceAfterIn = parseFloat(poolLongBalance) + parseFloat(inAmount)
-        longBalanceAfterIn = parseFloat(longBalanceAfterIn).toFixed(6)
-
-        let outAmountUsdc = poolTotalBalance / longBalanceAfterIn
-        outAmountUsdc = outAmountUsdc - poolUsdcBalance
-        outAmountUsdc *= (-1)
-        outAmountUsdc = parseFloat(outAmountUsdc).toFixed(6)
-        setOutAmount(outAmountUsdc)
-        let usdcRate = outAmountUsdc / parseFloat(inAmount)
-        usdcRate = parseFloat(usdcRate).toFixed(6)
-        setSwapRateUsdc(usdcRate)
+        let poolTotalBalance = longPoolUSDC * longPoolLong
+        poolTotalBalance = parseFloat(poolTotalBalance).toFixed(6)
+        if(longSwapTokenIn === 'USDC') {
+          let poolLongBalance = longPoolLong
+          let poolUsdcBalance = parseFloat(longPoolUSDC).toFixed(6)
+          let usdcBalanceAfterIn = parseFloat(poolUsdcBalance) + parseFloat(inAmount)
+          usdcBalanceAfterIn = parseFloat(usdcBalanceAfterIn).toFixed(6)
+          let outAmountLong = poolTotalBalance / usdcBalanceAfterIn
+          outAmountLong = outAmountLong - poolLongBalance
+          outAmountLong *= (-1)
+          outAmountLong = parseFloat(outAmountLong).toFixed(6)
+          setOutAmount(outAmountLong)
+          let usdcRate = parseFloat(inAmount) / outAmountLong
+          usdcRate = parseFloat(usdcRate).toFixed(6)
+          setSwapRateUsdc(usdcRate)
+        } else {
+          let poolUsdcBalance = longPoolUSDC
+          let poolLongBalance = parseFloat(longPoolLong).toFixed(6)
+          let longBalanceAfterIn = parseFloat(poolLongBalance) + parseFloat(inAmount)
+          longBalanceAfterIn = parseFloat(longBalanceAfterIn).toFixed(6)
+          let outAmountUsdc = poolTotalBalance / longBalanceAfterIn
+          outAmountUsdc = outAmountUsdc - poolUsdcBalance
+          outAmountUsdc *= (-1)
+          outAmountUsdc = parseFloat(outAmountUsdc).toFixed(6)
+          setOutAmount(outAmountUsdc)
+          let usdcRate = outAmountUsdc / parseFloat(inAmount)
+          usdcRate = parseFloat(usdcRate).toFixed(6)
+          setSwapRateUsdc(usdcRate)
+        }
       }
     }
 
+
   }, [inAmount, longSwapTokenIn])
+
+  useEffect(async () => {
+    if(!disableOut) {
+      let currentOutAmount = parseFloat(outAmount).toFixed(6)
+      currentOutAmount = parseFloat(currentOutAmount)
+      if(currentOutAmount === null || currentOutAmount == 0 || currentOutAmount === undefined || isNaN(currentOutAmount)) {
+        setInAmount(0)
+        setSwapRateUsdc(0)
+      } else {
+        let poolTotalBalance = longPoolUSDC * longPoolLong
+        if(longSwapTokenIn === 'USDC') {
+          let poolUsdcBalance = longPoolUSDC
+          let poolLongBalance = parseFloat(longPoolLong).toFixed(6)
+          let longBalanceAfterIn = parseFloat(poolLongBalance) + parseFloat(outAmount)
+          longBalanceAfterIn = parseFloat(longBalanceAfterIn)
+          let outAmountUsdc = poolTotalBalance / longBalanceAfterIn
+          outAmountUsdc = outAmountUsdc - poolUsdcBalance
+          outAmountUsdc *= (-1)
+          outAmountUsdc = parseFloat(outAmountUsdc).toFixed(6)
+          setInAmount(outAmountUsdc)
+          let usdcRate = outAmountUsdc / parseFloat(outAmount)
+          usdcRate = parseFloat(usdcRate).toFixed(6)
+          setSwapRateUsdc(usdcRate)
+        }
+      }
+    }
+
+  }, [outAmount, longSwapTokenOut])
 
   function SingleSwap(
     poolId,
@@ -189,11 +217,10 @@ export default function SwapInfo({
            <Input.Group>
              <div style={{margin:20}}>
                <Input style={{ width: '75%' }} value = {inAmount} type="float" onChange={e => {
+                 setDisableIn(false)
+                 setDisableOut(true)
                  setInAmount(e.target.value)
 
-                 if(e.target.value === '' || e.target.value === '0') {
-                   setOutAmount(0)
-                 }
                }}/>
                <span>{longSwapTokenIn}</span>
              </div>
@@ -202,7 +229,12 @@ export default function SwapInfo({
                <span>USDC per LONG: {swapRateUsdc}</span>
              </div><div style={{margin:20}}>
 
-               <Input style={{ width: '75%' }} value= {outAmount} />
+               <Input style={{ width: '75%' }} value= {outAmount} onChange={e => {
+                 setDisableOut(false)
+                 setDisableIn(true)
+                 setOutAmount(e.target.value)
+
+               }}/>
                <span>{longSwapTokenOut}</span>
              </div>
 
