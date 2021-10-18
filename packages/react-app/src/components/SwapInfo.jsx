@@ -102,7 +102,10 @@ export default function SwapInfo({
   }, [longSwapTokenOut])
 
   useEffect(async () => {
-    if(inAmount === '' || inAmount === '0' || inAmount === '0.' || inAmount === '.' || inAmount === '.0') {
+    let currentInAmount = parseFloat(inAmount).toFixed(6)
+    currentInAmount = parseFloat(currentInAmount)
+    console.log("currentINAmount", currentInAmount)
+    if(currentInAmount === null || currentInAmount == 0 || currentInAmount === undefined || isNaN(currentInAmount) ) {
       setOutAmount(0)
       setSwapRateUsdc(0)
     } else {
