@@ -116,8 +116,8 @@ export default function SwapInfo({
         console.log("poolTotalBalance", poolTotalBalance)
         console.log("poolTotalBalanceType", typeof(poolTotalBalance))
         if(longSwapTokenIn === 'USDC') {
-          let poolLongBalance = longPoolLong
-          let poolUsdcBalance = longPoolUSDC
+          let poolLongBalance = Number(longPoolLong)
+          let poolUsdcBalance = Number(longPoolUSDC)
           let usdcBalanceAfterIn = poolUsdcBalance + userValue
           let outAmountLong = poolTotalBalance / usdcBalanceAfterIn
           outAmountLong = outAmountLong - poolLongBalance
@@ -157,11 +157,18 @@ export default function SwapInfo({
         console.log("uservalue", userValue)
         let poolTotalBalance = longPoolUSDC * longPoolLong
         if(longSwapTokenIn === 'USDC') {
-          let poolUsdcBalance = longPoolUSDC
-          let poolLongBalance = longPoolLong
+          let poolUsdcBalance = Number(longPoolUSDC)
+          console.log("poolUsdcBalance", poolUsdcBalance)
+          console.log("poolUsdcBalancetypeOf", typeof(poolUsdcBalance))
+          let poolLongBalance = Number(longPoolLong)
+          console.log("typeofLongBalance", typeof(poolLongBalance))
+          console.log("poolLongBalance", poolLongBalance)
           poolLongBalance += userValue
+          console.log("poolLongBalance +", poolLongBalance)
           poolTotalBalance = poolTotalBalance / poolLongBalance
+          console.log("poolTotalBalance/", poolTotalBalance)
           poolTotalBalance = poolTotalBalance - poolUsdcBalance
+          console.log("poolTotalBalance -", poolTotalBalance)
           let outAmountUsdc = poolTotalBalance / (-1)
           console.log("outAmount before conv", outAmountUsdc)
           outAmountUsdc = convertToFloat(outAmountUsdc)
