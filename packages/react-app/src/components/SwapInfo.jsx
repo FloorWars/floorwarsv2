@@ -53,7 +53,8 @@ export default function SwapInfo({
   let fUsdcBalance = usdcBalance ? parseFloat(utils.formatUnits(usdcBalance, 6)).toFixed(6) : null;
   let longPoolUSDC = poolTokensLong ? poolTokensLong[1][0] : null;
   let longPoolLong = poolTokensLong ? poolTokensLong[1][1] : null;
-
+  // console.log(longPoolUSDC.toString())
+  // console.log(longPoolLong.toString())
 
 
   useEffect(async () => {
@@ -118,10 +119,9 @@ export default function SwapInfo({
           let poolUsdcBalance = longPoolUSDC
           let usdcBalanceAfterIn = poolUsdcBalance.add(userValue)
           let outAmountLong = poolTotalBalance.div(usdcBalanceAfterIn)
-          outAmountLong = outAmountLong.sub(poolLongBalance)
-          outAmountLong = outAmountLong.div(-1)
-          let usdcRate = outAmountLong.toNumber() / userValue.toNumber()
-          setSwapRateUsdc(usdcRate)
+          outAmountLong = poolLongBalance.sub(outAmountLong)
+          // let usdcRate = outAmountLong.toNumber() / userValue.toNumber()
+          // setSwapRateUsdc(usdcRate)
 
           setOutAmount(utils.formatUnits(outAmountLong, 6))
 
@@ -149,6 +149,7 @@ export default function SwapInfo({
         setSwapRateUsdc(0)
       } else {
         let userValue = convertToBig(outAmount)
+        console.log(userValue.toString())
 
         let poolTotalBalance = longPoolUSDC.mul(longPoolLong)
 
@@ -157,21 +158,21 @@ export default function SwapInfo({
 
           let poolLongBalance = longPoolLong
 
-          poolLongBalance = poolLongBalance.add(userValue)
+          poolLongBalance = poolLongBalance.sub(userValue)
 
           poolTotalBalance = poolTotalBalance.div(poolLongBalance)
 
           poolTotalBalance = poolTotalBalance.sub(poolUsdcBalance)
 
-          let outAmountUsdc = poolTotalBalance.div(-1)
 
 
-          let swapRate = outAmountUsdc.toNumber() / userValue.toNumber()
 
-          setSwapRateUsdc(swapRate)
-      
+          // let swapRate = poolTotalBalance.toNumber() / userValue.toNumber()
+          //
+          // setSwapRateUsdc(swapRate)
 
-          setInAmount(utils.formatUnits(outAmountUsdc, 6))
+
+          setInAmount(utils.formatUnits(poolTotalBalance, 6))
 
         }
       }
