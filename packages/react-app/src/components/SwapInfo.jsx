@@ -131,12 +131,14 @@ export default function SwapInfo({
         } else {
           let poolUsdcBalance = longPoolUSDC
           let poolLongBalance = longPoolLong
-          let longBalanceAfterIn = poolLongBalance + userValue
-          let outAmountUsdc = poolTotalBalance / longBalanceAfterIn
-          outAmountUsdc = outAmountUsdc - poolUsdcBalance
-          outAmountUsdc /= (-1)
+          let longBalanceAfterIn = poolLongBalance.add(userValue)
+          let outAmountUsdc = poolTotalBalance.div(longBalanceAfterIn)
+          outAmountUsdc = poolUsdcBalance.sub(outAmountUsdc)
 
-          setOutAmount(outAmountUsdc)
+          let swapRate = parseFloat(outAmountUsdc) / parseFloat(userValue)
+          swapRate = swapRate.toFixed(6)
+          setSwapRateUsdc(swapRate)
+          setOutAmount(utils.formatUnits(outAmountUsdc, 6))
 
         }
       }
@@ -168,6 +170,17 @@ export default function SwapInfo({
 
           setInAmount(utils.formatUnits(poolTotalBalance, 6))
 
+        } else {
+          let poolUsdcBalance = longPoolUSDC
+          let poolLongBalance = longPoolLong
+          poolUsdcBalance = poolUsdcBalance.sub(userValue)
+          poolTotalBalance = poolTotalBalance.div(poolUsdcBalance)
+          poolTotalBalance = poolTotalBalance.sub(poolLongBalance)
+
+          let swapRate = parseFloat(userValue) / parseFloat(poolTotalBalance)
+          swapRate = swapRate.toFixed(6)
+          setSwapRateUsdc(swapRate)
+          setInAmount(utils.formatUnits(poolTotalBalance, 6))
         }
       }
     }
