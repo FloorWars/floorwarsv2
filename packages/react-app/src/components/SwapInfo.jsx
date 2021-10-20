@@ -119,8 +119,9 @@ export default function SwapInfo({
           let poolLongBalance = longPoolLong
           let poolUsdcBalance = longPoolUSDC
           let usdcBalanceAfterIn = poolUsdcBalance + userValue
-          let outAmountLong = poolTotalBalance - usdcBalanceAfterIn
-          outAmountLong = outAmountLong / poolLongBalance
+          let outAmountLong = poolTotalBalance / usdcBalanceAfterIn
+          outAmountLong = outAmountLong - poolLongBalance
+          outAmountLong *= (-1)
           outAmountLong = parseFloat(outAmountLong).toFixed(6)
           setOutAmount(outAmountLong)
           let usdcRate = userValue / outAmountLong
@@ -133,7 +134,7 @@ export default function SwapInfo({
           longBalanceAfterIn = parseFloat(longBalanceAfterIn).toFixed(6)
           let outAmountUsdc = poolTotalBalance / longBalanceAfterIn
           outAmountUsdc = outAmountUsdc - poolUsdcBalance
-          outAmountUsdc *= (-1)
+          outAmountUsdc /= (-1)
           outAmountUsdc = parseFloat(outAmountUsdc).toFixed(6)
           setOutAmount(outAmountUsdc)
           let usdcRate = outAmountUsdc / parseFloat(inAmount)
@@ -161,7 +162,7 @@ export default function SwapInfo({
           poolLongBalance += userValue
           poolTotalBalance = poolTotalBalance / poolLongBalance
           poolTotalBalance = poolTotalBalance - poolUsdcBalance
-          let outAmountUsdc = poolTotalBalance * (-1)
+          let outAmountUsdc = poolTotalBalance / (-1)
           outAmountUsdc = parseFloat(outAmountUsdc).toFixed(6)
           setInAmount(outAmountUsdc)
           let usdcRate = outAmountUsdc / userValue
