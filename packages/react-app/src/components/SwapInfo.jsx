@@ -51,8 +51,8 @@ export default function SwapInfo({
   let fLongBalance = longBalance ? parseFloat(utils.formatUnits(longBalance, 6)).toFixed(6) : null;
   let fShortBalance = shortBalance ? parseFloat(utils.formatUnits(shortBalance, 6)).toFixed(6) : null;
   let fUsdcBalance = usdcBalance ? parseFloat(utils.formatUnits(usdcBalance, 6)).toFixed(6) : null;
-  let longPoolUSDC = poolTokensLong ? parseFloat(utils.formatUnits(poolTokensLong[1][0], 6)) : null;
-  let longPoolLong = poolTokensLong ? parseFloat(utils.formatUnits(poolTokensLong[1][1], 6)) : null;
+  let longPoolUSDC = poolTokensLong ? poolTokensLong[1][0] : null;
+  let longPoolLong = poolTokensLong ? poolTokensLong[1][1] : null;
 
 
   useEffect(async () => {
@@ -109,7 +109,7 @@ export default function SwapInfo({
         setOutAmount(0)
         setSwapRateUsdc(0)
       } else {
-        let userValue = parseFloat(inAmount)
+        let userValue = convertToBig(inAmount)
         console.log("userValueType", typeof(userValue))
         console.log("userValue", userValue)
         let poolTotalBalance = longPoolUSDC * longPoolLong
@@ -122,9 +122,9 @@ export default function SwapInfo({
           let outAmountLong = poolTotalBalance / usdcBalanceAfterIn
           outAmountLong = outAmountLong - poolLongBalance
           outAmountLong /= (-1)
-          outAmountLong = parseFloat(outAmountLong).toFixed(6)
+          outAmountLong = convertToFloat(outAmountLong)
           setOutAmount(outAmountLong)
-          let usdcRate = userValue / outAmountLong
+          let usdcRate = convertToFloat(userValue) / outAmountLong
           usdcRate = parseFloat(usdcRate).toFixed(6)
           setSwapRateUsdc(usdcRate)
         } else {
@@ -137,7 +137,7 @@ export default function SwapInfo({
           outAmountUsdc = parseFloat(outAmountUsdc).toFixed(6)
           setOutAmount(outAmountUsdc)
           let usdcRate = outAmountUsdc / parseFloat(inAmount)
-          usdcRate = parseFloat(usdcRate).toFixed(6)
+          // usdcRate = parseFloat(usdcRate).toFixed(6)
           setSwapRateUsdc(usdcRate)
         }
       }
@@ -152,7 +152,8 @@ export default function SwapInfo({
         setInAmount(0)
         setSwapRateUsdc(0)
       } else {
-        let userValue = parseFloat(outAmount)
+        let userValue = convertToBig(outAmount)
+        console.log("userValue", userValue)
         console.log("uservalue", userValue)
         let poolTotalBalance = longPoolUSDC * longPoolLong
         if(longSwapTokenIn === 'USDC') {
@@ -162,9 +163,11 @@ export default function SwapInfo({
           poolTotalBalance = poolTotalBalance / poolLongBalance
           poolTotalBalance = poolTotalBalance - poolUsdcBalance
           let outAmountUsdc = poolTotalBalance / (-1)
-          outAmountUsdc = parseFloat(outAmountUsdc).toFixed(6)
+          console.log("outAmount before conv", outAmountUsdc)
+          outAmountUsdc = convertToFloat(outAmountUsdc)
+          console.log("outAmount after conv", outAmountUsdc)
           setInAmount(outAmountUsdc)
-          let usdcRate = outAmountUsdc / userValue
+          let usdcRate = outAmountUsdc / convertToFloat(userValue)
           usdcRate = parseFloat(usdcRate).toFixed(6)
           setSwapRateUsdc(usdcRate)
         }
@@ -172,6 +175,14 @@ export default function SwapInfo({
     }
 
   }, [outAmount, longSwapTokenOut])
+
+  function convertToBig(num) {
+    return num * (10**6)
+  }
+
+  function convertToFloat(num) {
+    return parseFloat(num / (10**6)).toFixed(6)
+  }
 
   function SingleSwap(
     poolId,
