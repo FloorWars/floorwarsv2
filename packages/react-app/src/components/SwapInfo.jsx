@@ -53,8 +53,7 @@ export default function SwapInfo({
   let fUsdcBalance = usdcBalance ? parseFloat(utils.formatUnits(usdcBalance, 6)).toFixed(6) : null;
   let longPoolUSDC = poolTokensLong ? poolTokensLong[1][0] : null;
   let longPoolLong = poolTokensLong ? poolTokensLong[1][1] : null;
-  // console.log(longPoolUSDC.toString())
-  // console.log(longPoolLong.toString())
+
 
 
   useEffect(async () => {
@@ -121,8 +120,15 @@ export default function SwapInfo({
           let outAmountLong = poolTotalBalance.div(usdcBalanceAfterIn)
           outAmountLong = poolLongBalance.sub(outAmountLong)
 
-          let swapRate = parseFloat(userValue) / parseFloat(outAmountLong)
-          swapRate = swapRate.toFixed(6)
+          console.log("userValue before swapRate", userValue)
+          console.log("outAmountLong before swapRate", outAmountLong)
+          let swapRate = userValue / outAmountLong
+
+          console.log("swapRate before formatUnits", swapRate)
+          console.log("typeof swapRate before formatUnits", typeof(swapRate))
+          swapRate = parseFloat(swapRate).toFixed(6)
+          console.log("typeof(swapRate)", typeof(swapRate))
+          console.log("swapRate", swapRate)
 
           setSwapRateUsdc(swapRate)
 
@@ -188,7 +194,8 @@ export default function SwapInfo({
   }, [outAmount, longSwapTokenOut])
 
   function convertToBig(num) {
-    return BigNumber.from(num * (10**6))
+    return utils.parseUnits(num, 6)
+
   }
 
   function convertToFloat(num) {
@@ -307,10 +314,13 @@ export default function SwapInfo({
                   tokenInAddress = longAddress
                   tokenOutAddress = colAddress
                 }
-
-                const limit = (Date.now()) / 1000 + 3600;
-                const swap = new SingleSwap(longPool, GIVEN_IN, tokenInAddress, tokenOutAddress, utils.formatEther(swapAmount,6))
+                setShowSpin(true)
+                const swapAmount = utils.parseUnits(inAmount, 6)
+                const deadline = Date.now() / 1000 + 3600;
+                const swap = new SingleSwap(longPool, GIVEN_IN, tokenInAddress, tokenOutAddress, swapAmount)
                 const fundManagement = new FundManagement(address, false, address, false)
+                const swapResult = await tx(writeContracts.BalancerVault.swap(swap, fundManagement, swapAmount, deadline))
+                .then((e) => setShowSpin(false))
               }
 
 
