@@ -44,6 +44,7 @@ export default function SwapInfo({
   const [swapRateUsdc, setSwapRateUsdc] = useState(0);
   const [disableIn, setDisableIn] = useState(false);
   const [disableOut, setDisableOut] = useState(false);
+  const [userValue, setUserValue] = useState(0);
 
   let fColAllowance = swapColAllowance ? parseFloat(utils.formatUnits(swapColAllowance, 6)).toFixed(6) : null;
   let fLongAllowance = longAllowance ? parseFloat(utils.formatUnits(longAllowance, 6)).toFixed(6) : null;
@@ -110,7 +111,6 @@ export default function SwapInfo({
         setOutAmount(0)
         setSwapRateUsdc(0)
       } else {
-        let userValue = convertToBig(inAmount)
         let poolTotalBalance = longPoolUSDC.mul(longPoolLong)
 
         if(longSwapTokenIn === 'USDC') {
@@ -159,7 +159,6 @@ export default function SwapInfo({
         setInAmount(0)
         setSwapRateUsdc(0)
       } else {
-        let userValue = convertToBig(outAmount)
         let poolTotalBalance = longPoolUSDC.mul(longPoolLong)
         if(longSwapTokenIn === 'USDC') {
           let poolUsdcBalance = longPoolUSDC
@@ -194,7 +193,7 @@ export default function SwapInfo({
   }, [outAmount, longSwapTokenOut])
 
   function convertToBig(num) {
-    return utils.parseUnits(num, 6)
+    return utils.parseUnits(num, 12)
 
   }
 
@@ -248,7 +247,11 @@ export default function SwapInfo({
                  setDisableIn(false)
                  setDisableOut(true)
                  if(!isNaN(e.target.value)) {
-                   setInAmount(e.target.value)
+                   try {
+                     let userValue = utils.parseUnits(e.target.value, 6)
+                     setUserValue(userValue)
+                     setInAmount(e.target.value)
+                   } catch (e) {}
                  }
 
                }}/>
@@ -263,7 +266,12 @@ export default function SwapInfo({
                  setDisableOut(false)
                  setDisableIn(true)
                  if(!isNaN(e.target.value)) {
-                   setOutAmount(e.target.value)
+                   try {
+                     let userValue = utils.parseUnits(e.target.value, 6)
+                     setUserValue(userValue)
+                     setOutAmount(e.target.value)
+                   } catch (e) {}
+
                  }
 
                }}/>
