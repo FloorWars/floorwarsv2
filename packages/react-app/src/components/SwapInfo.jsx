@@ -250,7 +250,7 @@ export default function SwapInfo({
                    try {
                      let userValue = utils.parseUnits(e.target.value, 6)
                      setUserValue(userValue)
-                     setInAmount(e.target.value)
+                     setInAmount(utils.formatUnits(userValue, 6))
                    } catch (e) {}
                  }
 
